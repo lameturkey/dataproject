@@ -14,19 +14,27 @@ think about comparisons in:
 * Athletes with the most gold medals nationalities
 * medals over the years
 
-the __main features__ should be:
-1. Visualisation one
-  * total medals by country
-  * total medals per capita
+the __main features__ are __bold__:
+1. __Bar chart__
+  * __total medals by country__
+  * __total medals per capita__
+  * medals per athlete
   * total medals per GDP(?)
-  * total medals in a specific event
+  * __total medals in a specific event__
+  * total medals in summer or winter
+  * compare continents
 
-2. Side visualisation one
-  * compare up to 5? countries over the years
-  * compare countries in specific events
 
-3. Side visualisation Two
-  * TODO
+2. __World map color of the same data in 1 side by side__
+  * continent support
+
+
+3. __Side visualisation one__
+  * __compare up to 5? countries over the years__ (fight clutter)
+  * __compare countries in specific events__
+
+
+
 
 
 ### data sources:
@@ -35,6 +43,8 @@ the __main features__ should be:
 
 ### external components:
 * D3
+* world heat map library?
 * maybe some other graphic libraries
 
 ### hardest parts:
+i have no clue
