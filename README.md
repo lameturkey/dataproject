@@ -4,7 +4,7 @@
 The olympic events are the most prestigious sports events known to us. Most of us had the question: how does my country compare to other countries?
 
 ## Solution:
-By making a visualisation where the user can use a interactive website to make his own comparisons within his interest.
+By making a visualisation where the user can use an interactive website to make his own comparisons within his interest.
 
 ![proposed project visualisation](project.png)
 the __main features__ are __bold__:
