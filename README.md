@@ -6,14 +6,7 @@ The olympic events are the most prestigious sports events known to us. Most of u
 ## Solution:
 By making a visualisation where the user can use a interactive website to make his own comparisons within his interest.
 
-think about comparisons in:
-* total medals by country
-* medals per capita in country
-* medals per event by country
-* medals / GDP (?)
-* Athletes with the most gold medals nationalities
-* medals over the years
-
+![proposed project visualisation](project.png)
 the __main features__ are __bold__:
 1. __Bar chart__
   * __total medals by country__
