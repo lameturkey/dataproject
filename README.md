@@ -1,5 +1,5 @@
 # dataproject rough concept
-
+ by Koen van der Kamp: 12466573
 ## Problem statement:
 The olympic events are the most prestigious sports events known to us. Most of us had the question: how does my country compare to other countries?
 
