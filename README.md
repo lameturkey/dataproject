@@ -19,11 +19,11 @@ the __main features__ are __bold__:
 
 
 2. __World map color of the same data in 1 side by side__
-  * continent support
+  * continent support (compare continents?)
 
 
-3. __Side visualisation one__
-  * __compare up to 5? countries over the years__ (fight clutter)
+3. __line graph__ (click on a country produces this)
+  * __compare up to 5? countries over the years__ (clutter?)
   * __compare countries in specific events__
 
 
@@ -40,4 +40,4 @@ the __main features__ are __bold__:
 * maybe some other graphic libraries
 
 ### hardest parts:
-i have no clue
+i have no clue linking stuff?
