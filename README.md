@@ -9,22 +9,22 @@ By making a visualisation where the user can use a interactive website to make h
 ![proposed project visualisation](project.png)
 the __main features__ are __bold__:
 1. __Bar chart__
-  * __total medals by country__
-  * __total medals per capita__
-  * medals per athlete
-  * total medals per GDP(?)
-  * __total medals in a specific event__
-  * total medals in summer or winter
-  * compare continents
+    * __total medals by country__
+    * __total medals per capita__
+    * medals per athlete
+    * total medals per GDP(?)
+    * __total medals in a specific event__
+    * total medals in summer or winter
+    * compare continents
 
 
 2. __World map color of the same data in 1 side by side__
-  * continent support (compare continents?)
+    * continent support (compare continents?)
 
 
-3. __line graph__ (click on a country produces this)
-  * __compare up to 5? countries over the years__ (clutter?)
-  * __compare countries in specific events__
+3.  __line graph__ (click on a country produces this)
+    * __compare up to 5? countries over the years__ (clutter?)
+    * __compare countries in specific events__
 
 
 
