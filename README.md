@@ -6,45 +6,30 @@ The olympic events are the most prestigious sports events known to us. Most of u
 ## Solution:
 By making a visualisation where the user can use an interactive website to make his own comparisons within his interest.
 
+Proposed structure: Martini glass structure
+force the user to first explore one country to get used to the interface. Only then be able to compare different countries
+
 ![proposed project visualisation](docs/project.png)
 the __main features__ are __bold__:
-1. __Bar chart__
-<<<<<<< HEAD
-  * __total medals by country__
-  * __total medals per capita__
-  * medals per athlete
-  * total medals per GDP(scatterplot)
-  * __total medals in a specific event__
-  * total medals in summer or winter
-  * compare continents
 
 
-2. __World map color of the same data in 1 side by side__
+1. __World heatmap of total medals__
   * continent support
-  * click on the world map to add countries to the  other charts
+  * __click on the world map to add countries to the  other charts__
 
+2. __Bar chart__
+    * __total medals by country__
+    * __total medals per capita__
+    * medals per athlete
+    * total medals per GDP(scatterplot)
+    * __total medals in a specific event__
+    * total medals in summer or winter
+    * compare continents
+    * __two dropdowns make changes in both graphs 1 and 2__
 
 3. __Side visualisation one__
   * __compare up to 5? countries over the years__ (user can pick the countries from the heatmap or barchart)
   * __compare countries in specific events__
-=======
-    * __total medals by country__
-    * __total medals per capita__
-    * medals per athlete
-    * total medals per GDP(?)
-    * __total medals in a specific event__
-    * total medals in summer or winter
-    * compare continents
-
-
-2. __World map color of the same data in 1 side by side__
-    * continent support (compare continents?)
-
-
-3.  __line graph__ (click on a country produces this)
-    * __compare up to 5? countries over the years__ (clutter?)
-    * __compare countries in specific events__
->>>>>>> 31bfb6c85f7bd763324220ded81c445d0553909d
 
 
 
@@ -59,7 +44,6 @@ the __main features__ are __bold__:
 * world map 02 update to d3 v4 [source](http://bl.ocks.org/micahstubbs/8e15870eb432a21f0bc4d3d527b2d14f)
 
 ### hardest parts:
-<<<<<<< HEAD
 i have no clue
 
 ### Inspirations and similar stuff
@@ -67,6 +51,7 @@ i have no clue
 
 Website containing some of the ideas:
 http://andybarefoot.com/olympics/index.html#population-talent
-=======
-i have no clue linking stuff?
->>>>>>> 31bfb6c85f7bd763324220ded81c445d0553909d
+
+interesting notes:
+data is made global.
+Updates a single graph. For other graphs refers to other pages.
