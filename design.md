@@ -10,6 +10,7 @@ All data should made ready with python. Try to only make minor changes or no cha
 #### Datacleaning in python:
   1. remove all athletes with no gold medals.
   2. transform the data to a single json
+  3. remove all years from population where no olympics were held
 
 ![pic](docs/design.png)
 
