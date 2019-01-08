@@ -12,11 +12,9 @@ All data should made ready with python. Try to only make minor changes or no cha
   2. transform the data to a single json
   3. remove all years from population where no olympics were held
 
-![pic](docs/design.png)
-
 #### javascript code:
 
 * one main function that 'handles' the data and passes it to other graphing functions for other graphs
 * world map used d3-tip unsure if this adds value to my project
 
-![pic](docs/dataflow.png)
+![pic](docs/diagram.png)
