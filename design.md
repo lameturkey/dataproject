@@ -6,13 +6,13 @@
 
 All data should made ready with python. Try to only make minor changes or no changes to the data with js.
 
-##### Datacleaning in python:
+#### Datacleaning in python:
   1. remove all athletes with no gold medals.
   2. transform the data to a single json
 
 ![pic](docs/design.png)
 
-##### javascript code:
+#### javascript code:
 
 * one main function that 'handles' the data and passes it to other graphing functions for other graphs
 
