@@ -15,5 +15,6 @@ All data should made ready with python. Try to only make minor changes or no cha
 #### javascript code:
 
 * one main function that 'handles' the data and passes it to other graphing functions for other graphs
+* world map used d3-tip unsure if this adds value to my project
 
 ![pic](docs/dataflow.png)
