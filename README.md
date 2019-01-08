@@ -18,20 +18,22 @@ the __main features__ are __bold__:
   * __click on the world map to add countries to the  other charts__
 
 2. __Bar chart__
-    * __total medals by country__
-    * __total medals per capita__
-    * medals per athlete sent
-    * __total medals in a specific event__
-    * total medals over total GDP (might be interesting if time)
-    * total medals in summer or winter
-    * compare continents
-    * __two dropdowns to make changes in all graphs__
+ * __data more readable than in a heatmap__
 
-3. __Side visualisation one__
+
+3. __Line chart or stacked line chart__
   * __compare up to 5? countries over the years__ (user can pick the countries from the heatmap or barchart)
   * __compare countries in specific events__
 
 
+4. __two dropdowns to make changes in all graphs__
+  * __total medals by country__
+  * __total medals per capita__
+  * medals per athlete sent
+  * __total medals in a specific event__
+  * total medals over total GDP (might be interesting if time)
+  * total medals in summer or winter
+  * compare continents
 
 
 ### data sources:
