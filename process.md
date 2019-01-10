@@ -8,7 +8,7 @@ Toughts on design process:
 * global data variables
 
 # day2
-
+##### 8/01/2019
 Using http://bl.ocks.org/jeremycflin/b43ab253f3ae02dced07 for the heatmap
 
 ### feedback:
@@ -24,7 +24,7 @@ found a way to remove duplicates from a list of dicts online:
 https://stackoverflow.com/questions/7090758/python-remove-duplicate-dictionaries-from-a-list
 
 # day 3
-
+##### 9/01/2019
 #todo
 1. how does worldmap work
 2. add population to the json
@@ -33,6 +33,7 @@ adding population to the json is too much work (manually converting names and su
 
 
 # day 4
+##### 10/01/2019
 1. worldmap is kinda working
 manually needed to change a few names to be compatible  with the names in the geojson these countries are still not found:
 FRG
@@ -66,3 +67,6 @@ charts.js:46 Chinese Taipei
 adapted my design structure
 
 At the end use bootstrap for making my site better (more user friendly)
+
+little space for the graphs.
+maybe make the navigation in bootstrap above (idea)

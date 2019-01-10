@@ -97,14 +97,36 @@ function loadline()
 {
 
   d3.select("body").append("svg").style("top", 400)
-    .attr("width", 1000).attr("height", 300).append("text").text("line chart here").attr("x", 40).attr("y", 40).style("font-size", "30px")
+    .attr("width", 500).attr("height", 300).append("text").text("line chart here").attr("x", 40).attr("y", 40).style("font-size", "30px")
 }
 
-function loadbar()
+function loadbar(dataobject)
 {
+  barwidth = 500
+  barheight = 350
+  padding = {
+    left: 20,
+    up: 1,
+    down: 20,
+    right: 1
+  }
+  xaxislist = []
+  yaxislist = []
   newsvg = d3.select("body").append("svg").attr("class", "barchart")
-      .attr("width", 600).attr("height", 300);
-  newsvg.append("rect").attr("width", 800).attr("height", 500).style("stroke", "blue").style("fill", "white");
+      .attr("width", 500).attr("height", 350);
+  xscale = d3.scaleOrdinal()
+              .domain(xaxislist)
+              .range([padding.left, barwidth - padding.right])
+  yscale = d3.scaleLinear()
+              .domain(yaxislist)
+              .range([barheight - padding.down, padding.up])
+
+  xaxis =  d3.axisBottom().scale(xscale)
+  yaxis = d3.axisLeft().scale(yscale)
+
+  newsvg.append("g").call(xaxis).attr("transform", "translate(0," + (barheight - padding.down) + ")");
+  newsvg.append("g").call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
+
   newsvg.append("text").text("A NICE (STACKED) BAR CHART HERE").attr("x", 200).attr("y", 200);
   d3.select("body").append("select").attr("class", "select").append("option").text("AXISOPTIONS")
   d3.select("body").append("select").attr("class", "select").append("option").text("SPORT")
