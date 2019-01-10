@@ -88,9 +88,28 @@ def savejson(dictionaries):
 #         print(set(errorlist))
 #         return struct
 
+def convert(list):
+    with open("conversion.json", "r") as jsonfile:
+        conversionlist = json.load(jsonfile)
+        for item in conversionlist:
+            try:
+                list[item[1]] = list[item[0]]
+                del list[item[0]]
+            except KeyError:
+                pass
+    return list
 
+def hardcode(athletes):
+    hardcodelist = [["England", "Great Britain"], ["USA", "United States"], ["Lebanon", "LIB"], ["The Bahamas", "Bahamas"]]
+    for element in hardcodelist:
+        athletes[element[0]] = athletes[element[1]]
+        del athletes[element[1]]
+    return athletes
 
 if __name__ == '__main__':
     athletes = reader(athletefile)
     athletes = clean(athletes)
+    athletes = convert(athletes)
+    athletes = hardcode(athletes)
+    print(athletes.keys())
     savejson(athletes)

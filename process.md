@@ -28,3 +28,41 @@ https://stackoverflow.com/questions/7090758/python-remove-duplicate-dictionaries
 #todo
 1. how does worldmap work
 2. add population to the json
+
+adding population to the json is too much work (manually converting names and such) prostponed to later date. This also averted my attention to the fact i need a way to convert the NOC to (national olympic comitiees to the names of the countries). I scraped this data from wikipedia (https://en.wikipedia.org/wiki/List_of_IOC_country_codes)
+
+
+# day 4
+1. worldmap is kinda working
+manually needed to change a few names to be compatible  with the names in the geojson these countries are still not found:
+FRG
+charts.js:46 YUG
+charts.js:46 URS
+charts.js:46 GDR
+charts.js:46 IOA
+charts.js:46 EUN
+charts.js:46 TCH
+charts.js:46 SCG
+charts.js:46 ANZ
+charts.js:46 BOH
+charts.js:46 UAR
+charts.js:46 WIF
+charts.js:46 AHO
+charts.js:46 Barbados
+charts.js:46 Bermuda
+charts.js:46 Bahrain
+charts.js:46 Grenada
+charts.js:46 Hong Kong
+charts.js:46 Virgin Islands
+charts.js:46 Liechtenstein
+charts.js:46 Monaco
+charts.js:46 Mauritius
+charts.js:46 Singapore
+charts.js:46 Serbia
+charts.js:46 Tanzania
+charts.js:46 Tonga
+charts.js:46 Chinese Taipei
+
+adapted my design structure
+
+At the end use bootstrap for making my site better (more user friendly)

@@ -46,8 +46,15 @@ def savejson(dictionaries):
     with open('conversion.json', 'w+') as jsonfile:
         json.dump(dictionaries, jsonfile, indent=4)
 
+def savecsv(conversionlist):
+    with open("csvfile.csv", "w+") as csvfile:
+        writer = csv.writer(csvfile)
+        for conversion in conversionlist:
+            writer.writerow(conversion)
+
 if __name__ == '__main__':
     html = simple_get("https://en.wikipedia.org/wiki/List_of_IOC_country_codes")
     dom = BeautifulSoup(html, 'html.parser')
     conversionlist = extract(dom)
     savejson(conversionlist)
+    savecsv(conversionlist)
