@@ -66,7 +66,10 @@ charts.js:46 Chinese Taipei
 
 adapted my design structure
 
-At the end use bootstrap for making my site better (more user friendly)
-
 little space for the graphs.
 maybe make the navigation in bootstrap above (idea)
+
+# day2
+##### 11/01/2019
+
+I'm having trouble acessing my data trough my functions. Looking up more information about scopes and functions

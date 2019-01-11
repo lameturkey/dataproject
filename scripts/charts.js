@@ -1,5 +1,4 @@
 function loadheatmap(countrybyname, geojson){
-
 var format = d3.format(",");
 
 // Set tooltips
@@ -33,20 +32,9 @@ var projection = d3.geoMercator()
   var path = d3.geoPath().projection(projection);
 
   svg.call(tip);
-      console.log(Object.keys(countrybyname))
     geojson.features.forEach(function(d) {
-      console.log(d.properties.name)
         d.value = countrybyname[d.properties.name]
-        countrybyname[d.properties.name] = 0
     });
-    console.log("--------------------")
-  Object.keys(countrybyname).forEach(function(d){
-    if (countrybyname[d] != 0)
-    {
-    console.log(d)
-    }
-
-  })
 
   svg.append("g")
       .attr("class", "countries")
@@ -82,6 +70,12 @@ var projection = d3.geoMercator()
 
             .style("stroke","white")
             .style("stroke-width",0.3);
+        })
+        .on("click", function(d){
+          name = d.properties.name;
+          object = {}
+          object[name] = countrybyname[name]
+          window.updatebar(object)
         });
 
   svg.append("path")
@@ -105,60 +99,91 @@ function loadbar(dataobject)
   barwidth = 500
   barheight = 350
   padding = {
-    left: 20,
-    up: 1,
+    left: 35,
+    up: 5,
     down: 20,
     right: 1
   }
-  xaxislist = []
-  yaxislist = []
+  data = {}
   newsvg = d3.select("body").append("svg").attr("class", "barchart")
       .attr("width", 500).attr("height", 350);
   xscale = d3.scaleOrdinal()
-              .domain(xaxislist)
               .range([padding.left, barwidth - padding.right])
   yscale = d3.scaleLinear()
-              .domain(yaxislist)
               .range([barheight - padding.down, padding.up])
 
   xaxis =  d3.axisBottom().scale(xscale)
   yaxis = d3.axisLeft().scale(yscale)
 
-  newsvg.append("g").call(xaxis).attr("transform", "translate(0," + (barheight - padding.down) + ")");
-  newsvg.append("g").call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
+  newsvg.append("g").attr("class", "barxaxis")
+                    .call(xaxis).attr("transform", "translate(0," + (barheight - padding.down) + ")");
+  newsvg.append("g").attr("class", "baryaxis")
+                    .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
 
   newsvg.append("text").text("A NICE (STACKED) BAR CHART HERE").attr("x", 200).attr("y", 200);
   d3.select("body").append("select").attr("class", "select").append("option").text("AXISOPTIONS")
   d3.select("body").append("select").attr("class", "select").append("option").text("SPORT")
   d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutme.html").text("about me")
   d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutdata.html").text("about data")
+  return function (datapoint)
+  {
+
+    data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
+    xscale = d3.scaleBand()
+                .domain(Object.keys(data))
+                .range([padding.left, barwidth - padding.right])
+                .padding(0.02)
+
+    yscale = d3.scaleLinear()
+                .domain([0, Math.max.apply(null, Object.values(data))])
+                .range([barheight - padding.down, padding.up])
+                .nice()
+
+
+    xaxis =  d3.axisBottom().scale(xscale)
+    yaxis = d3.axisLeft().scale(yscale)
+
+    console.log(data)
+    console.log()
+    d3.select(".barxaxis").transition().call(xaxis)
+    d3.select('.baryaxis').transition().call(yaxis)
+    bars = newsvg.selectAll("rect").data(Object.keys(data))
+    bars
+      .enter().append("rect").merge(bars)
+      .style("fill", "red")
+      .attr("x", function(d) { return xscale(d); })
+      .attr("width", xscale.bandwidth())
+      .attr("y", function(d) { return yscale(data[d])})
+      .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); })
+;
+  }
 }
 
  window.onload = function load()
  {
-   dataHandler()
+   request = dataHandler()
  }
 
- function dataHandler(parameter)
+ function dataHandler()
  {
    promises = [d3.json("world_countries.json"), d3.json("output.json")]
-   Promise.all(promises).then(function(values){
-     // currentvalues = calculatevalues(values)
+   Promise.all(promises).then(function(values)
+   {
 
-     geojson = values[0]
-     data = values[1]
+    geojson = values[0]
+    data = values[1]
     datalist =  calculatevalues(data, "all")
-    console.log(geojson)
     loadheatmap(datalist, geojson)
-    loadbar()
+    updatebar = loadbar()
+    window.barupdate = updatebar
     loadline()
    });
  }
 
- function calculatevalues(data, parameter)
+
+function calculatevalues(data, parameter)
 {
-  console.log(data)
-  heatmapobject = {};
+  object = {};
  Object.keys(data).forEach(function(country)
  {
    counter = 0
@@ -173,7 +198,7 @@ function loadbar(dataobject)
        })
      })
    })
-   heatmapobject[country] = counter
+   object[country] = counter
  })
- return heatmapobject
+ return object
 }
