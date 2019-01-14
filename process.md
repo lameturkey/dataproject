@@ -80,3 +80,5 @@ Tried to help somone with geojsons. ended up learning a bit about them
 ##### 14/01/2019
 
 Making the line script working
+
+For the line script a need for filtering is needed. Calculatevalues can now filter and give appropirate return objects
