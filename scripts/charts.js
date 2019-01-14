@@ -1,6 +1,5 @@
 function loadheatmap(countrybyname, geojson){
 var format = d3.format(",");
-
 // Set tooltips
 var tip = d3.tip()
             .attr('class', 'd3-tip')
@@ -75,7 +74,10 @@ var projection = d3.geoMercator()
           name = d.properties.name;
           object = {}
           object[name] = countrybyname[name]
+          if(object[name] != undefined)
+          {
           window.updatebar(object)
+        }
         });
 
   svg.append("path")
@@ -89,31 +91,74 @@ var projection = d3.geoMercator()
 
 function loadline()
 {
+  var lineheight = 300
+  var linewidth = 1500
+  var data = {}
+  var padding = {
+    left: 30,
+    right: 1,
+    up: 1,
+    down: 30
+  }
+  d3.select("body").append("svg").style("top", 380).style("position", "relative").attr("class", "linechart")
+    .attr("width", linewidth).attr("height", lineheight).append("text").text("line chart here").attr("x", 40).attr("y", 40).style("font-size", "30px")
+  linesvg = d3.select(".linechart")
 
-  d3.select("body").append("svg").style("top", 400)
-    .attr("width", 500).attr("height", 300).append("text").text("line chart here").attr("x", 40).attr("y", 40).style("font-size", "30px")
+  var xscale = d3.scaleLinear()
+              .range([padding.left, linewidth - padding.right])
+              .domain([])
+  var yscale = d3.scaleLinear()
+              .range([lineheight - padding.down, padding.up])
+              .domain([])
+  var xaxis =  d3.axisBottom().scale(xscale)
+  var yaxis = d3.axisLeft().scale(yscale)
+
+  linesvg.append("g").attr("class", "linexaxis")
+                    .call(xaxis).attr("transform", "translate(0," + (lineheight - padding.down) + ")");
+  linesvg.append("g").attr("class", "lineyaxis")
+                    .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
+  return function(object)
+  {
+    data[Object.keys(object)] = Object.values(object[0])
+
+    var xscale = d3.scaleLinear()
+                .range([padding.left, linewidth - padding.right])
+                .domain([1000, 2100])
+    var yscale = d3.scaleLinear()
+                .range([lineheight - padding.down, padding.up])
+                .domain([0, yearsmaxvalue])
+    var xaxis =  d3.axisBottom().scale(xscale)
+    var yaxis = d3.axisLeft().scale(yscale)
+
+    d3.select(".linexaxis").transition().call(xaxis)
+
+    d3.select(".lineyaxis").transition().call(yaxis)
+
+    console.log(data)
+  }
+
 }
 
 function loadbar(dataobject)
 {
-  barwidth = 500
-  barheight = 350
-  padding = {
+  var barwidth = 500
+  var barheight = 350
+  var padding = {
     left: 35,
     up: 5,
     down: 20,
     right: 1
   }
-  data = {}
-  newsvg = d3.select("body").append("svg").attr("class", "barchart")
+  var data = {}
+  var newsvg = d3.select("body").append("svg").attr("class", "barchart")
       .attr("width", 500).attr("height", 350);
-  xscale = d3.scaleOrdinal()
+  var xscale = d3.scaleOrdinal()
               .range([padding.left, barwidth - padding.right])
-  yscale = d3.scaleLinear()
+  var yscale = d3.scaleLinear()
               .range([barheight - padding.down, padding.up])
 
-  xaxis =  d3.axisBottom().scale(xscale)
-  yaxis = d3.axisLeft().scale(yscale)
+  var xaxis =  d3.axisBottom().scale(xscale)
+  var yaxis = d3.axisLeft().scale(yscale)
 
   newsvg.append("g").attr("class", "barxaxis")
                     .call(xaxis).attr("transform", "translate(0," + (barheight - padding.down) + ")");
@@ -125,10 +170,20 @@ function loadbar(dataobject)
   d3.select("body").append("select").attr("class", "select").append("option").text("SPORT")
   d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutme.html").text("about me")
   d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutdata.html").text("about data")
+
+  function removepoint(country)
+  {
+    delete data[country];
+    updatebar({})
+  }
+
   return function (datapoint)
   {
-
-    data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
+    console.log(Object.keys(datapoint))
+    if (Object.keys(datapoint).length != 0)
+    {
+      data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
+    }
     xscale = d3.scaleBand()
                 .domain(Object.keys(data))
                 .range([padding.left, barwidth - padding.right])
@@ -155,7 +210,10 @@ function loadbar(dataobject)
       .attr("width", xscale.bandwidth())
       .attr("y", function(d) { return yscale(data[d])})
       .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); })
-;
+      .on("click", function(d){ removepoint(d)});
+
+    bars.exit().remove()
+
   }
 }
 
@@ -172,33 +230,70 @@ function loadbar(dataobject)
 
     geojson = values[0]
     data = values[1]
-    datalist =  calculatevalues(data, "all")
+    datalist =  calculatevalues(data, ["", "", "", ""], "bar")
     loadheatmap(datalist, geojson)
     updatebar = loadbar()
     window.barupdate = updatebar
-    loadline()
+    updateline = loadline()
+    console.log(calculatevalues(data, ["Australia", "", "", ""], "bar"))
    });
  }
 
-
-function calculatevalues(data, parameter)
+// calculates the (filtered) values for all graphs
+function calculatevalues(data, parameters, graph)
 {
+  console.log(parameters[1])
+  parameters[1] = parameters[1].split(" ")[0]
+  console.log(typeof(parameters[1]))
   object = {};
  Object.keys(data).forEach(function(country)
  {
    counter = 0
-   Object.keys(data[country]).forEach(function(game)
+   if (parameters[0] === "" || parameters[0] === country)
    {
-     Object.keys(data[country][game]).forEach(function(medal)
+     Object.keys(data[country]).forEach(function(game)
      {
-       Object.keys(data[country][game][medal]).forEach(function(sport)
+       if (parameters[1] === "" || parameters[1] === game.split(" ")[0])
        {
-         counter += parseInt(data[country][game][medal][sport])
+         Object.keys(data[country][game]).forEach(function(medal)
+         {
+           if (parameters[2] === "" || parameters[2] === medal)
+           {
+           Object.keys(data[country][game][medal]).forEach(function(sport)
+           {
+             if (parameters[3] === "" || parameters[3] === sport)
+             {
+              counter += parseInt(data[country][game][medal][sport])
+              }
 
-       })
+           })
+         }
+         })
+       }
+       if (graph === "line")
+       {
+          object[game] = counter
+          counter = 0
+       }
      })
-   })
+    }
+  if (counter != 0)
+  {
    object[country] = counter
+  }
  })
  return object
+}
+
+// calculate the maximum value of a list of lists
+//  used the help of:
+// https://stackoverflow.com/questions/10564441/how-to-find-the-max-min-of-a-nested-array-in-javascript
+//  however i adjusted it
+function yearsmaxvalue(object)
+{
+  lists = Object.values(object)
+  var max = d3.max(lists, function(lists) {
+  return d3.max(lists);
+});
+return max
 }

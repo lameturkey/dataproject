@@ -69,7 +69,14 @@ adapted my design structure
 little space for the graphs.
 maybe make the navigation in bootstrap above (idea)
 
-# day2
+# day 5
 ##### 11/01/2019
 
 I'm having trouble acessing my data trough my functions. Looking up more information about scopes and functions
+Tried to help somone with geojsons. ended up learning a bit about them
+
+
+# day 6
+##### 14/01/2019
+
+Making the line script working
