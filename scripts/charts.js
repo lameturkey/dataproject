@@ -77,7 +77,10 @@ var projection = d3.geoMercator()
           if(object[name] != undefined)
           {
           window.updatebar(object)
-        }
+          var data = window.requestdata(name)
+          console.log(data)
+          window.updateline([name, data])
+          }
         });
 
   svg.append("path")
@@ -91,9 +94,11 @@ var projection = d3.geoMercator()
 
 function loadline()
 {
+  var yearsmaxvalue = 0
   var lineheight = 300
   var linewidth = 1500
-  var data = {}
+  var lines = []
+  var countrylist = []
   var padding = {
     left: 30,
     right: 1,
@@ -113,30 +118,88 @@ function loadline()
   var xaxis =  d3.axisBottom().scale(xscale)
   var yaxis = d3.axisLeft().scale(yscale)
 
+
+
   linesvg.append("g").attr("class", "linexaxis")
                     .call(xaxis).attr("transform", "translate(0," + (lineheight - padding.down) + ")");
   linesvg.append("g").attr("class", "lineyaxis")
                     .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
+      window.removeline = function removeline(country)
+                    {
+                      var index = countrylist.indexOf(country);
+                      countrylist.splice(index, 1);
+                      lines.splice(index, 1);
+                      window.updateline()
+                    }
+
+
   return function(object)
   {
-    data[Object.keys(object)] = Object.values(object[0])
+    if (object != undefined)
+    {
+      name = object[0]
+      object = object[1]
+
+      if(countrylist.includes(name))
+      {
+        return
+      }
+
+      maxvalue = Math.max.apply(null, Object.values(data))
+      if (maxvalue > yearsmaxvalue)
+      {
+        yearsmaxvalue = maxvalue
+      }
+      var array1 = Object.keys(object)
+      var array2 = array1.map(function(d){
+        newobject = {}
+        newobject["medals"] = object[d]
+        newobject["year"] = parseInt(d)
+        return newobject
+      })
+      lines.push(array2)
+      countrylist.push(name)
+    }
+
+    allmedals = []
+    allyears = []
+    lines.forEach(function(array){
+      allyears = allyears.concat(array.map(function(objectpoint){
+        return objectpoint.year
+      }))
+      allmedals = allmedals.concat(array.map(function(objectpoint){
+        return objectpoint.medals
+      }))
+    })
 
     var xscale = d3.scaleLinear()
                 .range([padding.left, linewidth - padding.right])
-                .domain([1000, 2100])
+                  .domain([Math.min.apply(null, allyears), Math.max.apply(null, allyears)])
     var yscale = d3.scaleLinear()
                 .range([lineheight - padding.down, padding.up])
-                .domain([0, yearsmaxvalue])
+                .domain([Math.min.apply(null, allmedals), Math.max.apply(null, allmedals)])
     var xaxis =  d3.axisBottom().scale(xscale)
     var yaxis = d3.axisLeft().scale(yscale)
 
-    d3.select(".linexaxis").transition().call(xaxis)
+    line = d3.line().x(function(d){return xscale(d.year)})
+                    .y(function(d){return yscale(d.medals)})
 
+    d3.select(".linexaxis").transition().call(xaxis)
     d3.select(".lineyaxis").transition().call(yaxis)
 
-    console.log(data)
-  }
+    currentlines = linesvg.selectAll(".line").data(lines)
 
+
+
+    currentlines.enter().append("path").merge(currentlines)
+      .attr("class", "line")
+      .attr("d", line)
+
+    currentlines.exit().remove()
+
+
+
+}
 }
 
 function loadbar(dataobject)
@@ -179,7 +242,6 @@ function loadbar(dataobject)
 
   return function (datapoint)
   {
-    console.log(Object.keys(datapoint))
     if (Object.keys(datapoint).length != 0)
     {
       data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
@@ -198,8 +260,6 @@ function loadbar(dataobject)
     xaxis =  d3.axisBottom().scale(xscale)
     yaxis = d3.axisLeft().scale(yscale)
 
-    console.log(data)
-    console.log()
     d3.select(".barxaxis").transition().call(xaxis)
     d3.select('.baryaxis').transition().call(yaxis)
     bars = newsvg.selectAll("rect").data(Object.keys(data))
@@ -210,7 +270,11 @@ function loadbar(dataobject)
       .attr("width", xscale.bandwidth())
       .attr("y", function(d) { return yscale(data[d])})
       .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); })
-      .on("click", function(d){ removepoint(d)});
+      .on("click", function(d)
+      {
+        removepoint(d)
+        window.removeline(d)
+      });
 
     bars.exit().remove()
 
@@ -219,7 +283,7 @@ function loadbar(dataobject)
 
  window.onload = function load()
  {
-   request = dataHandler()
+   dataHandler()
  }
 
  function dataHandler()
@@ -234,17 +298,22 @@ function loadbar(dataobject)
     loadheatmap(datalist, geojson)
     updatebar = loadbar()
     window.barupdate = updatebar
-    updateline = loadline()
-    console.log(calculatevalues(data, ["Australia", "", "", ""], "bar"))
+    window.updateline = loadline()
+    window.requestdata = function(country)
+    {
+      console.log(country)
+        return calculatevalues(data, [country, "", "", ""], "line")
+    }
+    //
+    // window.updateline(["Australia", calculatevalues(data, ["Australia", "", "", ""], "line")])
+    // window.updateline(["USA", calculatevalues(data, ["USA", "", "", ""], "line")])
    });
  }
 
 // calculates the (filtered) values for all graphs
 function calculatevalues(data, parameters, graph)
 {
-  console.log(parameters[1])
   parameters[1] = parameters[1].split(" ")[0]
-  console.log(typeof(parameters[1]))
   object = {};
  Object.keys(data).forEach(function(country)
  {
@@ -272,7 +341,7 @@ function calculatevalues(data, parameters, graph)
        }
        if (graph === "line")
        {
-          object[game] = counter
+          object[game.split(" ")[0]] = counter
           counter = 0
        }
      })
@@ -283,17 +352,4 @@ function calculatevalues(data, parameters, graph)
   }
  })
  return object
-}
-
-// calculate the maximum value of a list of lists
-//  used the help of:
-// https://stackoverflow.com/questions/10564441/how-to-find-the-max-min-of-a-nested-array-in-javascript
-//  however i adjusted it
-function yearsmaxvalue(object)
-{
-  lists = Object.values(object)
-  var max = d3.max(lists, function(lists) {
-  return d3.max(lists);
-});
-return max
 }
