@@ -3,22 +3,28 @@
   stroke: steelblue;
   stroke-width: 2px;
 }
-
+.about
+{
+  position: fixed;
+}
+select
+{
+    position: fixed;
+    z-index: 100000000;
+}
+.sportselect
+{
+  left: 100px
+}
 svg
 {
   position: absolute;
   top: 50px;
 }
-.select{
-  position: relative;
-  width: 100px;
-  height: 30px;
-  font-size: 10px;
-}
 
 .barchart
 {
-  left: 700px
+  left: 650px
 }
 .names {
 fill: none;

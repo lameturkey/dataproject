@@ -39,7 +39,7 @@ var projection = d3.geoMercator()
       .attr("class", "countries")
     .selectAll("path")
       .data(geojson.features)
-    .enter().append("path")
+    .enter().append("path").attr("class", "countryform")
       .attr("d", path)
       .style("fill", "blue")
       .style('stroke', 'white')
@@ -76,9 +76,9 @@ var projection = d3.geoMercator()
           object[name] = countrybyname[name]
           if(object[name] != undefined)
           {
-          window.updatebar(object)
-          var data = window.requestdata(name)
-          console.log(data)
+          var data = window.requestdata(name, "bar")
+          window.updatebar(data)
+          var data = window.requestdata(name, "line")
           window.updateline([name, data])
           }
         });
@@ -88,6 +88,27 @@ var projection = d3.geoMercator()
       //.datum(topojson.mesh(data.features, function(a, b) { return a !== b; }))
       .attr("class", "names")
       .attr("d", path);
+    return function()
+    {
+
+      countrybyname = calculatevalues(data, ["", "", "", ""], "bar")
+      hue.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
+          .range([0.1, 1])
+
+      geojson.features.forEach(function(d) {
+          d.value = countrybyname[d.properties.name]
+      });
+
+      d3.selectAll(".countryform")
+        .data(geojson.features)
+        .style("opacity", function(d) {
+              if (d.value != undefined)
+              {
+                return hue(d.value)
+              }
+              return 0
+            })
+    }
 
 }
 
@@ -96,9 +117,10 @@ function loadline()
 {
   var yearsmaxvalue = 0
   var lineheight = 300
-  var linewidth = 1500
+  var linewidth = 1150
   var lines = []
   var countrylist = []
+  var currentsport = d3.select(".sportselect").property('value')
   var padding = {
     left: 30,
     right: 1,
@@ -135,7 +157,25 @@ function loadline()
 
   return function(object)
   {
-    if (object != undefined)
+    if (currentsport != d3.select(".sportselect").property('value'))
+    {
+      lines = []
+      for (country in countrylist)
+      {
+        var data = window.requestdata(countrylist[country], "line")
+        var array1 = Object.keys(data)
+        var array2 = array1.map(function(d){
+          newobject = {}
+          newobject["medals"] = data[d]
+          newobject["year"] = parseInt(d)
+          return newobject
+        })
+        lines.push(array2)
+      }
+      currentsport = d3.select(".sportselect").property('value')
+
+    }
+    if (object !== undefined)
     {
       name = object[0]
       object = object[1]
@@ -145,7 +185,7 @@ function loadline()
         return
       }
 
-      maxvalue = Math.max.apply(null, Object.values(data))
+      maxvalue = Math.max.apply(null, Object.values(object))
       if (maxvalue > yearsmaxvalue)
       {
         yearsmaxvalue = maxvalue
@@ -211,6 +251,7 @@ function loadbar(dataobject)
     right: 1
   }
   var data = {}
+  var currentsport = d3.select(".sportselect").property('value')
   var newsvg = d3.select("body").append("svg").attr("class", "barchart")
       .attr("width", 500).attr("height", 350);
   var xscale = d3.scaleOrdinal()
@@ -227,6 +268,7 @@ function loadbar(dataobject)
                     .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
 
 
+
   function removepoint(country)
   {
     delete data[country];
@@ -238,6 +280,21 @@ function loadbar(dataobject)
     if (Object.keys(datapoint).length != 0)
     {
       data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
+    }
+    if (currentsport != d3.select(".sportselect").property('value'))
+    {
+      countries = Object.keys(data)
+      data = {}
+      for (country in countries)
+      {
+        data[countries[country]] = window.requestdata(countries[country], "bar")[countries[country]]
+        if (data[countries[country]]  === undefined)
+        {
+          data[countries[country]] = 0
+        }
+      }
+      currentsport = d3.select(".sportselect").property('value')
+
     }
     xscale = d3.scaleBand()
                 .domain(Object.keys(data))
@@ -274,12 +331,17 @@ function loadbar(dataobject)
   }
 }
 
-function makebuttons()
+function makebuttons(sportslist)
 {
-  d3.select("body").append("select").attr("class", "select").append("option").text("AXISOPTIONS")
-  d3.select("body").append("select").attr("class", "select").append("option").text("SPORT")
-  d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutme.html").text("about me")
-  d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutdata.html").text("about data")
+  medalselect = d3.select("body").append("select").attr("class", "medalselect")
+  sportselect = d3.select("body").append("select").attr("class", "sportselect").on("change", onchange)
+  for (var item in sportslist)
+  {
+    sportselect.append("option").text(sportslist[item]).attr('value', sportslist[item]);
+  }
+
+  d3.select("body").append("a").attr("class", "about").attr("href", "pages/aboutme.html").text("about me")
+  d3.select("body").append("a").attr("class", "about").attr("href", "pages/aboutdata.html").text("about data")
 }
  window.onload = function load()
  {
@@ -288,34 +350,38 @@ function makebuttons()
 
  function dataHandler()
  {
-   promises = [d3.json("world_countries.json"), d3.json("output.json"), d3.json("allselections.json")]
+   promises = [d3.json("world_countries.json"), d3.json("output.json"), d3.json("sportslist.json")]
    Promise.all(promises).then(function(values)
    {
-
+    window.updateheatmap = function(x) {}
+    sportslist = values[2].sort()
+    sportslist.unshift("All")
     geojson = values[0]
     data = values[1]
+    makebuttons(sportslist)
     datalist =  calculatevalues(data, ["", "", "", ""], "bar")
-    loadheatmap(datalist, geojson)
-    updatebar = loadbar()
-    window.barupdate = updatebar
+    window.updateheatmap = loadheatmap(datalist, geojson)
+    window.updatebar = loadbar()
     window.updateline = loadline()
-    window.requestdata = function(country)
+    window.requestdata = function(country, kind)
     {
-      console.log(country)
-        return calculatevalues(data, [country, "", "", ""], "line")
+        return calculatevalues(data, [country, "", "", ""], kind)
     }
-    makebuttons()
-    //
-    // window.updateline(["Australia", calculatevalues(data, ["Australia", "", "", ""], "line")])
-    // window.updateline(["USA", calculatevalues(data, ["USA", "", "", ""], "line")])
    });
  }
 
 // calculates the (filtered) values for all graphs
 function calculatevalues(data, parameters, graph)
 {
+
+  parameters[3] = d3.select(".sportselect").property('value')
+  if (parameters[3] == "All")
+  {
+    parameters[3] = ""
+  }
   parameters[1] = parameters[1].split(" ")[0]
   object = {};
+  console.log(data)
  Object.keys(data).forEach(function(country)
  {
    counter = 0
@@ -352,5 +418,14 @@ function calculatevalues(data, parameters, graph)
    object[country] = counter
   }
  })
+ console.log(object)
  return object
+}
+
+
+function onchange()
+{
+  window.updateheatmap()
+  window.updatebar({})
+  window.updateline()
 }

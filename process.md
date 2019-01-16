@@ -91,3 +91,5 @@ problem solved line chart now fully functional maybe add legenda
 
 # day 8
 ##### 16/01/2019
+  * dropdown 1 working with update all graphs
+  * struggle with variables. i did not use var, was a big mistake.

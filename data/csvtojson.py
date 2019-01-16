@@ -52,8 +52,8 @@ def clean(athletes):
 
     return countrydict
 
-def savejson(dictionaries):
-    with open('output.json', 'w+') as jsonfile:
+def savejson(dictionaries, name):
+    with open(name, 'w+') as jsonfile:
         json.dump(dictionaries, jsonfile, indent=4)
 
 # def addpop(struct):
@@ -100,7 +100,15 @@ def convert(list):
     return list
 
 def savefilters(athletes):
-    print(athletes)
+    sportslist = []
+    for country in athletes:
+        for game in athletes[country]:
+            for medal in athletes[country][game]:
+                for sport in athletes[country][game][medal]:
+                    if sport not in sportslist:
+                        sportslist.append(sport)
+    print(sportslist)
+    return sportslist
 
 def hardcode(athletes):
     hardcodelist = [["England", "Great Britain"], ["USA", "United States"], ["Lebanon", "LIB"], ["The Bahamas", "Bahamas"]]
@@ -115,5 +123,6 @@ if __name__ == '__main__':
     athletes = convert(athletes)
     athletes = hardcode(athletes)
     print(athletes.keys())
-    savejson(athletes)
-    savefilters(athletes)
+    savejson(athletes, "output.json")
+    sportslist = savefilters(athletes)
+    savejson(sportslist, "sportslist.json")
