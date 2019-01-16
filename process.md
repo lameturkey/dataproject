@@ -15,7 +15,6 @@ Using http://bl.ocks.org/jeremycflin/b43ab253f3ae02dced07 for the heatmap
 suggestion: click on world map and show in both graphs.
 i also think this works better.
 
-##### 15:21:
 Need a way to see what golds belong to what sports this is not included in my json object right now. adjusted accordingly (see the picture). Also adjusted some other values for easier acess
 
 ![pic](docs/jsonchange.png)
@@ -87,3 +86,8 @@ For the line script a need for filtering is needed. Calculatevalues can now filt
 # day 7
 ##### 15/01/2019
 lots of problems with .enter() .data() .datum() .merge() trying to figure out how they work in depth
+
+problem solved line chart now fully functional maybe add legenda
+
+# day 8
+##### 16/01/2019

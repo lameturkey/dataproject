@@ -99,6 +99,9 @@ def convert(list):
                 pass
     return list
 
+def savefilters(athletes):
+    print(athletes)
+
 def hardcode(athletes):
     hardcodelist = [["England", "Great Britain"], ["USA", "United States"], ["Lebanon", "LIB"], ["The Bahamas", "Bahamas"]]
     for element in hardcodelist:
@@ -113,3 +116,4 @@ if __name__ == '__main__':
     athletes = hardcode(athletes)
     print(athletes.keys())
     savejson(athletes)
+    savefilters(athletes)

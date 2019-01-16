@@ -189,8 +189,6 @@ function loadline()
 
     currentlines = linesvg.selectAll(".line").data(lines)
 
-
-
     currentlines.enter().append("path").merge(currentlines)
       .attr("class", "line")
       .attr("d", line)
@@ -228,11 +226,6 @@ function loadbar(dataobject)
   newsvg.append("g").attr("class", "baryaxis")
                     .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
 
-  newsvg.append("text").text("A NICE (STACKED) BAR CHART HERE").attr("x", 200).attr("y", 200);
-  d3.select("body").append("select").attr("class", "select").append("option").text("AXISOPTIONS")
-  d3.select("body").append("select").attr("class", "select").append("option").text("SPORT")
-  d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutme.html").text("about me")
-  d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutdata.html").text("about data")
 
   function removepoint(country)
   {
@@ -281,6 +274,13 @@ function loadbar(dataobject)
   }
 }
 
+function makebuttons()
+{
+  d3.select("body").append("select").attr("class", "select").append("option").text("AXISOPTIONS")
+  d3.select("body").append("select").attr("class", "select").append("option").text("SPORT")
+  d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutme.html").text("about me")
+  d3.select("body").append("a").attr("class", "text").attr("href", "pages/aboutdata.html").text("about data")
+}
  window.onload = function load()
  {
    dataHandler()
@@ -288,7 +288,7 @@ function loadbar(dataobject)
 
  function dataHandler()
  {
-   promises = [d3.json("world_countries.json"), d3.json("output.json")]
+   promises = [d3.json("world_countries.json"), d3.json("output.json"), d3.json("allselections.json")]
    Promise.all(promises).then(function(values)
    {
 
@@ -304,6 +304,7 @@ function loadbar(dataobject)
       console.log(country)
         return calculatevalues(data, [country, "", "", ""], "line")
     }
+    makebuttons()
     //
     // window.updateline(["Australia", calculatevalues(data, ["Australia", "", "", ""], "line")])
     // window.updateline(["USA", calculatevalues(data, ["USA", "", "", ""], "line")])
