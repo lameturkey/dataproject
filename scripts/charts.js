@@ -3,7 +3,8 @@ function loadheatmap(countrybyname, geojson){
   // Set tooltips
   var tip = d3.tip()
               .attr('class', 'd3-tip')
-              .offset([-10, 0])
+              .direction("s")
+              .offset([-0, -10])
               .html(function(d) {
                 return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Total Medals: </strong><span class='details'>" + format(d.value) +"</span>";
               })
@@ -148,13 +149,13 @@ function loadline()
                     .call(xaxis).attr("transform", "translate(0," + (lineheight - padding.down) + ")");
   linesvg.append("g").attr("class", "lineyaxis")
                     .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
-      window.removeline = function removeline(country)
-                    {
-                      var index = countrylist.indexOf(country);
-                      countrylist.splice(index, 1);
-                      lines.splice(index, 1);
-                      window.updateline()
-                    }
+  window.removeline = function removeline(country)
+      {
+        var index = countrylist.indexOf(country);
+        countrylist.splice(index, 1);
+        lines.splice(index, 1);
+        window.updateline()
+      }
 
 
   return function(object)
