@@ -93,3 +93,13 @@ problem solved line chart now fully functional maybe add legenda
 ##### 16/01/2019
   * dropdown 1 working with update all graphs
   * struggle with variables. i did not use var, was a big mistake.
+
+# day 9
+##### 17/01/2019
+ * last dropdown working
+ * i notice that the code is very hectic with alot of stuff that doens't do anything.
+ * fixed a bug where summer and winter are simultainiously
+
+ I will dedicate the rest of today to cleaning the code and making it better (maybe tomorrow also)
+
+ Axisoptions as a dropdown will be hard because i need to load in new data. The two dropdowns are "sports"  en "Summer/Winter/All"

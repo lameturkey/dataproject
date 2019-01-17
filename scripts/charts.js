@@ -1,37 +1,38 @@
 function loadheatmap(countrybyname, geojson){
-var format = d3.format(",");
-// Set tooltips
-var tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function(d) {
-              return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Total Medals: </strong><span class='details'>" + format(d.value) +"</span>";
-            })
+  var format = d3.format(",");
+  // Set tooltips
+  var tip = d3.tip()
+              .attr('class', 'd3-tip')
+              .offset([-10, 0])
+              .html(function(d) {
+                return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Total Medals: </strong><span class='details'>" + format(d.value) +"</span>";
+              })
 
-var margin = {top: 0, right: 0, bottom: 0, left: 0},
-            width = 672 - margin.left - margin.right,
-            height = 350 - margin.top - margin.bottom;
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+              width = 672 - margin.left - margin.right,
+              height = 350 - margin.top - margin.bottom;
 
-var hue = d3.scaleLinear()
-    .domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
-    .range([0.1, 1])
-var path = d3.geoPath();
+  var hue = d3.scaleLinear()
+      .domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
+      .range([0.1, 1])
+  var path = d3.geoPath();
 
-var svg = d3.select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append('g')
-            .attr('class', 'map');
+  var svg = d3.select("body")
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height)
+              .append('g')
+              .attr('class', 'map');
 
-var projection = d3.geoMercator()
-                   .scale(100)
-                  .translate( [width / 2, height / 1.5]);
+  var projection = d3.geoMercator()
+                     .scale(100)
+                    .translate( [width / 2, height / 1.5]);
 
   var path = d3.geoPath().projection(projection);
 
   svg.call(tip);
-    geojson.features.forEach(function(d) {
+    geojson.features.forEach(function(d)
+    {
         d.value = countrybyname[d.properties.name]
     });
 
@@ -91,7 +92,7 @@ var projection = d3.geoMercator()
     return function()
     {
 
-      countrybyname = calculatevalues(data, ["", "", "", ""], "bar")
+      countrybyname = calculatevalues(data, "", "bar")
       hue.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
           .range([0.1, 1])
 
@@ -121,6 +122,7 @@ function loadline()
   var lines = []
   var countrylist = []
   var currentsport = d3.select(".sportselect").property('value')
+  var currentseason = d3.select(".seasonselect").property("value")
   var padding = {
     left: 30,
     right: 1,
@@ -128,7 +130,7 @@ function loadline()
     down: 30
   }
   d3.select("body").append("svg").style("top", 380).style("position", "relative").attr("class", "linechart")
-    .attr("width", linewidth).attr("height", lineheight).append("text").text("line chart here").attr("x", 40).attr("y", 40).style("font-size", "30px")
+    .attr("width", linewidth).attr("height", lineheight)
   linesvg = d3.select(".linechart")
 
   var xscale = d3.scaleLinear()
@@ -157,7 +159,7 @@ function loadline()
 
   return function(object)
   {
-    if (currentsport != d3.select(".sportselect").property('value'))
+    if (currentsport != d3.select(".sportselect").property('value') || currentseason != d3.select(".seasonselect").property("value"))
     {
       lines = []
       for (country in countrylist)
@@ -173,7 +175,7 @@ function loadline()
         lines.push(array2)
       }
       currentsport = d3.select(".sportselect").property('value')
-
+      currentseason = d3.select(".seasonselect").property("value")
     }
     if (object !== undefined)
     {
@@ -184,7 +186,6 @@ function loadline()
       {
         return
       }
-
       maxvalue = Math.max.apply(null, Object.values(object))
       if (maxvalue > yearsmaxvalue)
       {
@@ -237,7 +238,7 @@ function loadline()
 
 
 
-}
+  }
 }
 
 function loadbar(dataobject)
@@ -252,6 +253,8 @@ function loadbar(dataobject)
   }
   var data = {}
   var currentsport = d3.select(".sportselect").property('value')
+  var currentseason = d3.select(".seasonselect").property("value")
+
   var newsvg = d3.select("body").append("svg").attr("class", "barchart")
       .attr("width", 500).attr("height", 350);
   var xscale = d3.scaleOrdinal()
@@ -281,7 +284,7 @@ function loadbar(dataobject)
     {
       data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
     }
-    if (currentsport != d3.select(".sportselect").property('value'))
+    if (currentsport != d3.select(".sportselect").property('value') || currentseason != d3.select(".seasonselect").property("value"))
     {
       countries = Object.keys(data)
       data = {}
@@ -294,6 +297,7 @@ function loadbar(dataobject)
         }
       }
       currentsport = d3.select(".sportselect").property('value')
+      currentseason = d3.select(".seasonselect").property("value")
 
     }
     xscale = d3.scaleBand()
@@ -333,7 +337,12 @@ function loadbar(dataobject)
 
 function makebuttons(sportslist)
 {
-  medalselect = d3.select("body").append("select").attr("class", "medalselect")
+  seasonselect = d3.select("body").append("select").attr("class", "seasonselect").on("change", onchange)
+
+  seasonselect.append("option").text("All").attr("value", "All")
+  seasonselect.append("option").text("Winter").attr("value", "Winter")
+  seasonselect.append("option").text("Summer").attr("value", "Summer")
+
   sportselect = d3.select("body").append("select").attr("class", "sportselect").on("change", onchange)
   for (var item in sportslist)
   {
@@ -359,56 +368,56 @@ function makebuttons(sportslist)
     geojson = values[0]
     data = values[1]
     makebuttons(sportslist)
-    datalist =  calculatevalues(data, ["", "", "", ""], "bar")
+    datalist =  calculatevalues(data, "", "bar")
     window.updateheatmap = loadheatmap(datalist, geojson)
     window.updatebar = loadbar()
     window.updateline = loadline()
     window.requestdata = function(country, kind)
     {
-        return calculatevalues(data, [country, "", "", ""], kind)
+        return calculatevalues(data, country, kind)
     }
    });
  }
 
 // calculates the (filtered) values for all graphs
-function calculatevalues(data, parameters, graph)
+function calculatevalues(data, countryFilter, graph)
 {
-
-  parameters[3] = d3.select(".sportselect").property('value')
-  if (parameters[3] == "All")
+  season = d3.select(".seasonselect").property('value')
+  if (season == "All")
   {
-    parameters[3] = ""
+    season = ""
   }
-  parameters[1] = parameters[1].split(" ")[0]
+  sportsFilter = d3.select(".sportselect").property('value')
+  if (sportsFilter == "All")
+  {
+    sportsFilter = ""
+  }
   object = {};
-  console.log(data)
  Object.keys(data).forEach(function(country)
  {
    counter = 0
-   if (parameters[0] === "" || parameters[0] === country)
+   if (countryFilter === "" || countryFilter === country)
    {
      Object.keys(data[country]).forEach(function(game)
      {
-       if (parameters[1] === "" || parameters[1] === game.split(" ")[0])
+       if (season === "" || game.split(" ")[1] === season)
        {
          Object.keys(data[country][game]).forEach(function(medal)
          {
-           if (parameters[2] === "" || parameters[2] === medal)
-           {
            Object.keys(data[country][game][medal]).forEach(function(sport)
            {
-             if (parameters[3] === "" || parameters[3] === sport)
+             if (sportsFilter === "" || sportsFilter === sport)
              {
               counter += parseInt(data[country][game][medal][sport])
               }
 
            })
-         }
          })
        }
        if (graph === "line")
        {
-          object[game.split(" ")[0]] = counter
+          object[game.split(" ")[0]] = object[game.split(" ")[0]] || 0
+          object[game.split(" ")[0]] = counter + object[game.split(" ")[0]]
           counter = 0
        }
      })
@@ -418,7 +427,6 @@ function calculatevalues(data, parameters, graph)
    object[country] = counter
   }
  })
- console.log(object)
  return object
 }
 

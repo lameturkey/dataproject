@@ -12,6 +12,10 @@ select
     position: fixed;
     z-index: 100000000;
 }
+.seasonselect
+{
+  left: 300px
+}
 .sportselect
 {
   left: 100px
@@ -19,7 +23,6 @@ select
 svg
 {
   position: absolute;
-  top: 50px;
 }
 
 .barchart
