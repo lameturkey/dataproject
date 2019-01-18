@@ -103,3 +103,8 @@ problem solved line chart now fully functional maybe add legenda
  I will dedicate the rest of today to cleaning the code and making it better (maybe tomorrow also)
 
  Axisoptions as a dropdown will be hard because i need to load in new data. The two dropdowns are "sports"  en "Summer/Winter/All"
+
+# day 10
+##### 18/01/2019
+ * Geen data op een bepaalde spelen is aangegeven als 0 medailles. dit fixen.
+ * bar charts zelfde kleur als line chart maken dan is de bar chart een soort van de legenda voor de line graph

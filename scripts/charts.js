@@ -213,7 +213,7 @@ function loadline()
         return objectpoint.medals
       }))
     })
-
+    console.log(lines)
     var xscale = d3.scaleLinear()
                 .range([padding.left, linewidth - padding.right])
                   .domain([Math.min.apply(null, allyears), Math.max.apply(null, allyears)])
@@ -234,6 +234,7 @@ function loadline()
     currentlines.enter().append("path").merge(currentlines)
       .attr("class", "line")
       .attr("d", line)
+      .attr("stroke", function(d) {return color(lines.indexOf(d))})
 
     currentlines.exit().remove()
 
@@ -315,21 +316,23 @@ function loadbar(dataobject)
     xaxis =  d3.axisBottom().scale(xscale)
     yaxis = d3.axisLeft().scale(yscale)
 
-    d3.select(".barxaxis").transition().call(xaxis)
-    d3.select('.baryaxis').transition().call(yaxis)
+    d3.select(".barxaxis").transition().duration(750).call(xaxis)
+    d3.select('.baryaxis').transition().duration(750).call(yaxis)
     bars = newsvg.selectAll("rect").data(Object.keys(data))
     bars
       .enter().append("rect").merge(bars)
-      .style("fill", "red")
-      .attr("x", function(d) { return xscale(d); })
-      .attr("width", xscale.bandwidth())
-      .attr("y", function(d) { return yscale(data[d])})
-      .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); })
       .on("click", function(d)
       {
         removepoint(d)
         window.removeline(d)
-      });
+      })
+      .transition().duration(750)
+      .style("fill", function(d) {return color(Object.keys(data).indexOf(d))})
+      .attr("x", function(d) { return xscale(d); })
+      .attr("width", xscale.bandwidth())
+      .attr("y", function(d) { return yscale(data[d])})
+      .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); })
+
 
     bars.exit().remove()
 
@@ -363,6 +366,7 @@ function makebuttons(sportslist)
    promises = [d3.json("world_countries.json"), d3.json("output.json"), d3.json("sportslist.json")]
    Promise.all(promises).then(function(values)
    {
+    window.color = colormaker()
     window.updateheatmap = function(x) {}
     sportslist = values[2].sort()
     sportslist.unshift("All")
@@ -437,4 +441,13 @@ function onchange()
   window.updateheatmap()
   window.updatebar({})
   window.updateline()
+}
+
+function colormaker()
+{
+  var color = d3.scaleOrdinal(d3.schemeCategory10);
+  return function(x)
+  {
+    return color(x)
+  }
 }

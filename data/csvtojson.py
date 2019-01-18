@@ -110,6 +110,16 @@ def savefilters(athletes):
     print(sportslist)
     return sportslist
 
+def saveyears(athletes):
+    yearlist = []
+    for country in athletes:
+        for game in athletes[country]:
+            game = game.split(" ")[0]
+            if game not in yearlist:
+                yearlist.append(game)
+    print(yearlist)
+    return yearlist
+
 def hardcode(athletes):
     hardcodelist = [["England", "Great Britain"], ["USA", "United States"], ["Lebanon", "LIB"], ["The Bahamas", "Bahamas"]]
     for element in hardcodelist:
@@ -126,3 +136,5 @@ if __name__ == '__main__':
     savejson(athletes, "output.json")
     sportslist = savefilters(athletes)
     savejson(sportslist, "sportslist.json")
+    years = saveyears(athletes)
+    savejson(years, "yearlist.json")
