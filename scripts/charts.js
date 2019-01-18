@@ -1,4 +1,5 @@
-function loadheatmap(countrybyname, geojson){
+function loadheatmap(countrybyname, geojson)
+{
   var format = d3.format(",");
   // Set tooltips
   var tip = d3.tip()
@@ -57,10 +58,12 @@ function loadheatmap(countrybyname, geojson){
         .style("stroke","white")
         .style('stroke-width', 0.3)
         .on('mouseover',function(d){
+          if(d.value == undefined)
+          {
+            d.value = 0
+          }
           tip.show(d);
-
           d3.select(this)
-
             .style("stroke","white")
             .style("stroke-width",3);
         })
@@ -115,8 +118,9 @@ function loadheatmap(countrybyname, geojson){
 }
 
 
-function loadline()
+function loadline(yeararray)
 {
+  var yeararray = yeararray
   var yearsmaxvalue = 0
   var lineheight = 300
   var linewidth = 1150
@@ -137,9 +141,11 @@ function loadline()
   var xscale = d3.scaleLinear()
               .range([padding.left, linewidth - padding.right])
               .domain([])
+
   var yscale = d3.scaleLinear()
               .range([lineheight - padding.down, padding.up])
               .domain([])
+
   var xaxis =  d3.axisBottom().scale(xscale)
   var yaxis = d3.axisLeft().scale(yscale)
 
@@ -156,7 +162,24 @@ function loadline()
         lines.splice(index, 1);
         window.updateline()
       }
-
+  function addemptyyears(object)
+  {
+    currentyears = Object.keys(object)
+    var emptyyears = yeararray.filter(function(value, index, arr)
+    {
+      if (currentyears.includes(value))
+      {
+        return false
+      }
+      return true
+    });
+    console.log(emptyyears)
+    emptyyears.forEach(function(element)
+    {
+      object[element] = 0
+    })
+    return object
+  }
 
   return function(object)
   {
@@ -166,6 +189,7 @@ function loadline()
       for (country in countrylist)
       {
         var data = window.requestdata(countrylist[country], "line")
+        data = addemptyyears(data)
         var array1 = Object.keys(data)
         var array2 = array1.map(function(d){
           newobject = {}
@@ -182,11 +206,11 @@ function loadline()
     {
       name = object[0]
       object = object[1]
-
       if(countrylist.includes(name))
       {
         return
       }
+      addemptyyears(object)
       maxvalue = Math.max.apply(null, Object.values(object))
       if (maxvalue > yearsmaxvalue)
       {
@@ -205,7 +229,8 @@ function loadline()
 
     allmedals = []
     allyears = []
-    lines.forEach(function(array){
+    lines.forEach(function(array)
+    {
       allyears = allyears.concat(array.map(function(objectpoint){
         return objectpoint.year
       }))
@@ -213,7 +238,6 @@ function loadline()
         return objectpoint.medals
       }))
     })
-    console.log(lines)
     var xscale = d3.scaleLinear()
                 .range([padding.left, linewidth - padding.right])
                   .domain([Math.min.apply(null, allyears), Math.max.apply(null, allyears)])
@@ -363,9 +387,10 @@ function makebuttons(sportslist)
 
  function dataHandler()
  {
-   promises = [d3.json("world_countries.json"), d3.json("output.json"), d3.json("sportslist.json")]
+   promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
    Promise.all(promises).then(function(values)
    {
+    yearlist = values[3]
     window.color = colormaker()
     window.updateheatmap = function(x) {}
     sportslist = values[2].sort()
@@ -376,7 +401,7 @@ function makebuttons(sportslist)
     datalist =  calculatevalues(data, "", "bar")
     window.updateheatmap = loadheatmap(datalist, geojson)
     window.updatebar = loadbar()
-    window.updateline = loadline()
+    window.updateline = loadline(yearlist)
     window.requestdata = function(country, kind)
     {
         return calculatevalues(data, country, kind)
