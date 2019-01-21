@@ -123,20 +123,32 @@ function loadline(yeararray)
   var yeararray = yeararray
   var yearsmaxvalue = 0
   var lineheight = 300
-  var linewidth = 1150
+  var linewidth = 1250
   var lines = []
   var countrylist = []
   var currentsport = d3.select(".sportselect").property('value')
   var currentseason = d3.select(".seasonselect").property("value")
   var padding = {
     left: 30,
-    right: 1,
+    right: 100,
     up: 1,
     down: 30
   }
   d3.select("body").append("svg").style("top", 380).style("position", "relative").attr("class", "linechart")
     .attr("width", linewidth).attr("height", lineheight)
+
+
   linesvg = d3.select(".linechart")
+  d3.select("body").append("div").attr("class", "tooltip")
+
+  overlay = linesvg.append('rect')
+      .attr('width', linewidth)
+      .attr('height', lineheight)
+      .attr('opacity', 0)
+      .on('mousemove', drawTooltip)
+      .on('mouseout', removeTooltip);
+
+  const tooltipLine = d3.line().x(d => x(d.year)).y(d => y(d.medals));
 
   var xscale = d3.scaleLinear()
               .range([padding.left, linewidth - padding.right])
@@ -148,7 +160,7 @@ function loadline(yeararray)
 
   var xaxis =  d3.axisBottom().scale(xscale)
   var yaxis = d3.axisLeft().scale(yscale)
-
+  linesvg.append("line").attr("class", "tooltipline")
 
 
   linesvg.append("g").attr("class", "linexaxis")
@@ -164,21 +176,101 @@ function loadline(yeararray)
       }
   function addemptyyears(object)
   {
-    currentyears = Object.keys(object)
+    var currentseason = d3.select(".seasonselect").property("value")
+    var currentyears = Object.keys(object)
+
     var emptyyears = yeararray.filter(function(value, index, arr)
     {
       if (currentyears.includes(value))
       {
         return false
       }
-      return true
+      if (value < 1992)
+      {
+        return true
+      }
+      else if (currentseason === "Summer" && ((value - 1992) % 4) === 0)
+      {
+        return false
+      }
+      else if (currentseason === "Winter" && ((value - 1994) % 4) === 0)
+      {
+        return false
+      }
+      return false
     });
-    console.log(emptyyears)
     emptyyears.forEach(function(element)
     {
       object[element] = 0
     })
     return object
+  }
+
+  function removeTooltip()
+  {
+    d3.select(".tooltip").selectAll("text").remove()
+    d3.select(".tooltipline").attr("visibility", "hidden")
+  }
+
+  function drawTooltip()
+  {
+
+    var mouseCoordinates = d3.mouse(this);
+    var year = Math.round(xscale.invert(mouseCoordinates[0]))
+    var nearestyear = 0
+    lines.forEach(function(line)
+    {
+        line.forEach(function(datapoint)
+        {
+          if (Math.abs(year - datapoint.year) < Math.abs(year - nearestyear))
+          {
+            nearestyear = datapoint.year
+          }
+        })
+    })
+    var object = {}
+    object["year"] = nearestyear
+    lines.forEach(function(line)
+    {
+        line.forEach(function(datapoint)
+        {
+          if (datapoint.year == nearestyear)
+          {
+            object[countrylist[lines.indexOf(line)]] = datapoint.medals
+          }
+        })
+    })
+    if (object["year"] != 0)
+    {
+      text = d3.select(".tooltip")
+      .style("left", (mouseCoordinates[0] + 20 + padding.left) + "px")
+      .style("top", (mouseCoordinates[1] + 10 + 350) + "px")
+      // .attr("transform", "translate("+ (mouseCoordinates[0] + 20) + "," + (mouseCoordinates[1] + 10) + ")")
+      .selectAll("text")
+      text.data(Object.keys(object))
+        .enter()
+        .append("text")
+        .merge(text)
+        .attr("y", (d, i) => i * 20)
+        .html(function(d)
+        {
+            if (d != "year")
+            {
+              return d + ": " + object[d] + " <br> "
+            }
+            else
+              {
+                return "<b>" + object[d] + "</b> <br>"
+              }
+        })
+      linesvg.select("line").attr("class", "tooltipline")
+              .style("stroke", "black")
+              .attr("visibility", "visible")
+              .attr("x1", xscale(nearestyear))
+              .attr("x2", xscale(nearestyear))
+              .attr("y1", lineheight - padding.down)
+              .attr("y2", padding.up)
+      }
   }
 
   return function(object)
@@ -238,12 +330,10 @@ function loadline(yeararray)
         return objectpoint.medals
       }))
     })
-    var xscale = d3.scaleLinear()
-                .range([padding.left, linewidth - padding.right])
+    xscale.range([padding.left, linewidth - padding.right])
                   .domain([Math.min.apply(null, allyears), Math.max.apply(null, allyears)])
-    var yscale = d3.scaleLinear()
-                .range([lineheight - padding.down, padding.up])
-                .domain([Math.min.apply(null, allmedals), Math.max.apply(null, allmedals)])
+    yscale.range([lineheight - padding.down, padding.up])
+          .domain([0, Math.max.apply(null, allmedals)])
     var xaxis =  d3.axisBottom().scale(xscale)
     var yaxis = d3.axisLeft().scale(yscale)
 
@@ -337,11 +427,22 @@ function loadbar(dataobject)
                 .nice()
 
 
+
     xaxis =  d3.axisBottom().scale(xscale)
     yaxis = d3.axisLeft().scale(yscale)
 
+
+
     d3.select(".barxaxis").transition().duration(750).call(xaxis)
     d3.select('.baryaxis').transition().duration(750).call(yaxis)
+
+    d3.select('.barchart').select(".barxaxis").selectAll('.tick')
+            .data(Object.keys(data))
+            .on('click', function(country)
+            {
+              removepoint(country)
+              window.removeline(country)
+            })
     bars = newsvg.selectAll("rect").data(Object.keys(data))
     bars
       .enter().append("rect").merge(bars)
@@ -380,13 +481,14 @@ function makebuttons(sportslist)
   d3.select("body").append("a").attr("class", "about").attr("href", "pages/aboutme.html").text("about me")
   d3.select("body").append("a").attr("class", "about").attr("href", "pages/aboutdata.html").text("about data")
 }
- window.onload = function load()
- {
+
+window.onload = function load()
+{
    dataHandler()
  }
 
- function dataHandler()
- {
+function dataHandler()
+{
    promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
    Promise.all(promises).then(function(values)
    {
@@ -443,13 +545,14 @@ function calculatevalues(data, countryFilter, graph)
 
            })
          })
+         if (graph === "line")
+         {
+            object[game.split(" ")[0]] = object[game.split(" ")[0]] || 0
+            object[game.split(" ")[0]] = counter + object[game.split(" ")[0]]
+            counter = 0
+         }
        }
-       if (graph === "line")
-       {
-          object[game.split(" ")[0]] = object[game.split(" ")[0]] || 0
-          object[game.split(" ")[0]] = counter + object[game.split(" ")[0]]
-          counter = 0
-       }
+
      })
     }
   if (counter != 0)
@@ -457,6 +560,7 @@ function calculatevalues(data, countryFilter, graph)
    object[country] = counter
   }
  })
+ console.log(object)
  return object
 }
 

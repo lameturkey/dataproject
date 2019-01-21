@@ -1,3 +1,14 @@
+.tooltip
+{
+  position: absolute;
+  background-color: white;
+}
+
+.tick
+{
+  z-index: 100;
+}
+
 .line {
   fill: none;
   stroke-width: 2px;
