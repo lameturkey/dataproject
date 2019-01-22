@@ -112,8 +112,12 @@ problem solved line chart now fully functional maybe add legenda
  1 is fixed 2 ook
 
 # day 11
-##### 18/01/2019
+##### 21/01/2019
 als je filtert op zomerspelen dan worden alle winterspelen als 0 medailles weergeven op de line chart. (bug)
 fixed
 
 add tooltip for line chart
+
+
+# day 12
+##### 22

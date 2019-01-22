@@ -1,7 +1,10 @@
 function loadheatmap(countrybyname, geojson)
 {
+
+  // formatting of the value
   var format = d3.format(",");
-  // Set tooltips
+
+  // Set placeholder tooltip
   var tip = d3.tip()
               .attr('class', 'd3-tip')
               .direction("s")
@@ -10,15 +13,17 @@ function loadheatmap(countrybyname, geojson)
                 return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Total Medals: </strong><span class='details'>" + format(d.value) +"</span>";
               })
 
+  // graph padding
   var margin = {top: 0, right: 0, bottom: 0, left: 0},
               width = 672 - margin.left - margin.right,
               height = 350 - margin.top - margin.bottom;
 
+  // color coding used for opacity
   var hue = d3.scaleLinear()
       .domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
       .range([0.1, 1])
-  var path = d3.geoPath();
 
+  // produce svg
   var svg = d3.select("body")
               .append("svg")
               .attr("width", width)
@@ -26,18 +31,22 @@ function loadheatmap(countrybyname, geojson)
               .append('g')
               .attr('class', 'map');
 
+  // set the projection
   var projection = d3.geoMercator()
                      .scale(100)
                     .translate( [width / 2, height / 1.5]);
 
+  // make the path
   var path = d3.geoPath().projection(projection);
 
+  // initialise the tooltip with values
   svg.call(tip);
     geojson.features.forEach(function(d)
     {
         d.value = countrybyname[d.properties.name]
     });
 
+  // append all countries as paths
   svg.append("g")
       .attr("class", "countries")
     .selectAll("path")
@@ -47,6 +56,7 @@ function loadheatmap(countrybyname, geojson)
       .style("fill", "blue")
       .style('stroke', 'white')
       .style('stroke-width', 1.5)
+      // use the opacity for "heatmapping"
       .style("opacity", function(d) {
         if (d.value != undefined)
         {
@@ -54,6 +64,7 @@ function loadheatmap(countrybyname, geojson)
         }
         return 0
       })
+
       // tooltips
         .style("stroke","white")
         .style('stroke-width', 0.3)
@@ -75,6 +86,8 @@ function loadheatmap(countrybyname, geojson)
             .style("stroke","white")
             .style("stroke-width",0.3);
         })
+
+        // on click send info to line and bar charts
         .on("click", function(d){
           name = d.properties.name;
           object = {}
@@ -90,12 +103,14 @@ function loadheatmap(countrybyname, geojson)
 
   svg.append("path")
       .datum(topojson.mesh(geojson.features, function(a, b) { return a.id !== b.id; }))
-      //.datum(topojson.mesh(data.features, function(a, b) { return a !== b; }))
       .attr("class", "names")
       .attr("d", path);
+
+    // return the update function of the heatmap
     return function()
     {
 
+      // update the opacity scale and set the new values for each country
       countrybyname = calculatevalues(data, "", "bar")
       hue.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
           .range([0.1, 1])
@@ -104,6 +119,7 @@ function loadheatmap(countrybyname, geojson)
           d.value = countrybyname[d.properties.name]
       });
 
+      // update all the values
       d3.selectAll(".countryform")
         .data(geojson.features)
         .style("opacity", function(d) {
@@ -117,9 +133,11 @@ function loadheatmap(countrybyname, geojson)
 
 }
 
-
+// loads the line graph as just axis and returns the function that updates the line graph
 function loadline(yeararray)
 {
+
+  // variables for the line graph
   var yeararray = yeararray
   var yearsmaxvalue = 0
   var lineheight = 300
@@ -134,6 +152,8 @@ function loadline(yeararray)
     up: 1,
     down: 30
   }
+
+  // produce the barebones line chart
   d3.select("body").append("svg").style("top", 380).style("position", "relative").attr("class", "linechart")
     .attr("width", linewidth).attr("height", lineheight)
 
@@ -148,15 +168,18 @@ function loadline(yeararray)
       .on('mousemove', drawTooltip)
       .on('mouseout', removeTooltip);
 
-  const tooltipLine = d3.line().x(d => x(d.year)).y(d => y(d.medals));
+  // initialise the tooltip line
+  const tooltipLine = d3.line()
+                      .x(d => x(d.year))
+                      .y(d => y(d.medals));
 
   var xscale = d3.scaleLinear()
-              .range([padding.left, linewidth - padding.right])
-              .domain([])
+               .range([padding.left, linewidth - padding.right])
+               .domain([])
 
   var yscale = d3.scaleLinear()
-              .range([lineheight - padding.down, padding.up])
-              .domain([])
+               .range([lineheight - padding.down, padding.up])
+               .domain([])
 
   var xaxis =  d3.axisBottom().scale(xscale)
   var yaxis = d3.axisLeft().scale(yscale)
@@ -167,6 +190,8 @@ function loadline(yeararray)
                     .call(xaxis).attr("transform", "translate(0," + (lineheight - padding.down) + ")");
   linesvg.append("g").attr("class", "lineyaxis")
                     .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
+
+  // function to remove a line and assign it to the window so it can be used everywere
   window.removeline = function removeline(country)
       {
         var index = countrylist.indexOf(country);
@@ -174,6 +199,8 @@ function loadline(yeararray)
         lines.splice(index, 1);
         window.updateline()
       }
+
+  // function to set all year where no medal was won to 0 instead of no data
   function addemptyyears(object)
   {
     var currentseason = d3.select(".seasonselect").property("value")
@@ -206,18 +233,23 @@ function loadline(yeararray)
     return object
   }
 
+  // removes the tooltip
   function removeTooltip()
   {
     d3.select(".tooltip").selectAll("text").remove()
     d3.select(".tooltipline").attr("visibility", "hidden")
   }
 
+  // draws the tooltip
   function drawTooltip()
   {
 
+    // draws the tool tip on the mouse postition and the line on the nearest year
     var mouseCoordinates = d3.mouse(this);
     var year = Math.round(xscale.invert(mouseCoordinates[0]))
     var nearestyear = 0
+
+    // finds the nearest  year from the cursor location
     lines.forEach(function(line)
     {
         line.forEach(function(datapoint)
@@ -228,6 +260,8 @@ function loadline(yeararray)
           }
         })
     })
+
+    // produces the tooltip info
     var object = {}
     object["year"] = nearestyear
     lines.forEach(function(line)
@@ -240,29 +274,34 @@ function loadline(yeararray)
           }
         })
     })
+
+    // year = 0 means no valid year was found near the curor (no data yet in graph)
     if (object["year"] != 0)
     {
       text = d3.select(".tooltip")
-      .style("left", (mouseCoordinates[0] + 20 + padding.left) + "px")
-      .style("top", (mouseCoordinates[1] + 10 + 350) + "px")
-      // .attr("transform", "translate("+ (mouseCoordinates[0] + 20) + "," + (mouseCoordinates[1] + 10) + ")")
-      .selectAll("text")
+               .style("left", (mouseCoordinates[0] + 20 + padding.left) + "px")
+               .style("top", (mouseCoordinates[1] + 10 + 350) + "px")
+               .selectAll("text")
+
       text.data(Object.keys(object))
-        .enter()
-        .append("text")
-        .merge(text)
-        .attr("y", (d, i) => i * 20)
-        .html(function(d)
-        {
-            if (d != "year")
+          .enter()
+          .append("text")
+          .merge(text)
+          .attr("y", (d, i) => i * 20)
+          .html(function(d)
             {
-              return d + ": " + object[d] + " <br> "
-            }
-            else
-              {
-                return "<b>" + object[d] + "</b> <br>"
-              }
-        })
+                // formatting of the tooltip
+                if (d != "year")
+                {
+                  return d + ": " + object[d] + " <br> "
+                }
+                else
+                  {
+                    return "<b>" + object[d] + "</b> <br>"
+                  }
+            })
+
+      // adjust the line
       linesvg.select("line").attr("class", "tooltipline")
               .style("stroke", "black")
               .attr("visibility", "visible")
@@ -273,8 +312,11 @@ function loadline(yeararray)
       }
   }
 
+  // update function of the line graph takes an object with data from calculate values.
   return function(object)
   {
+
+    // if the current sport has changed update all the data (lines) currently stored
     if (currentsport != d3.select(".sportselect").property('value') || currentseason != d3.select(".seasonselect").property("value"))
     {
       lines = []
@@ -294,33 +336,38 @@ function loadline(yeararray)
       currentsport = d3.select(".sportselect").property('value')
       currentseason = d3.select(".seasonselect").property("value")
     }
+
+    // if and object is given turn it into a format that can be used to draw a line
     if (object !== undefined)
     {
-      name = object[0]
-      object = object[1]
-      if(countrylist.includes(name))
-      {
-        return
-      }
-      addemptyyears(object)
-      maxvalue = Math.max.apply(null, Object.values(object))
-      if (maxvalue > yearsmaxvalue)
-      {
-        yearsmaxvalue = maxvalue
-      }
-      var array1 = Object.keys(object)
-      var array2 = array1.map(function(d){
-        newobject = {}
-        newobject["medals"] = object[d]
-        newobject["year"] = parseInt(d)
-        return newobject
-      })
-      lines.push(array2)
-      countrylist.push(name)
-    }
+        name = object[0]
+        object = object[1]
+        if(countrylist.includes(name))
+        {
+          return
+        }
+        addemptyyears(object)
+        maxvalue = Math.max.apply(null, Object.values(object))
+        if (maxvalue > yearsmaxvalue)
+        {
+          yearsmaxvalue = maxvalue
+        }
+        var array1 = Object.keys(object)
+        var array2 = array1.map(function(d)
+        {
+          newobject = {}
+          newobject["medals"] = object[d]
+          newobject["year"] = parseInt(d)
+          return newobject
+        })
+        lines.push(array2)
+        countrylist.push(name)
+     }
 
     allmedals = []
     allyears = []
+
+    // calculate the maximum and minimum value of the years and medals for the scales
     lines.forEach(function(array)
     {
       allyears = allyears.concat(array.map(function(objectpoint){
@@ -337,11 +384,13 @@ function loadline(yeararray)
     var xaxis =  d3.axisBottom().scale(xscale)
     var yaxis = d3.axisLeft().scale(yscale)
 
+    d3.select(".linexaxis").transition().call(xaxis)
+    d3.select(".lineyaxis").transition().call(yaxis)
+
+    // line template
     line = d3.line().x(function(d){return xscale(d.year)})
                     .y(function(d){return yscale(d.medals)})
 
-    d3.select(".linexaxis").transition().call(xaxis)
-    d3.select(".lineyaxis").transition().call(yaxis)
 
     currentlines = linesvg.selectAll(".line").data(lines)
 
@@ -357,6 +406,7 @@ function loadline(yeararray)
   }
 }
 
+// function to load a bar chart and returns a function to update said bar chart
 function loadbar(dataobject)
 {
   var barwidth = 500
@@ -387,19 +437,24 @@ function loadbar(dataobject)
                     .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
 
 
-
+  // function that removes a bar from the bar chart ()
   function removepoint(country)
   {
     delete data[country];
     updatebar({})
   }
 
+  // return function that updates this bar chart
   return function (datapoint)
   {
+
+    // if a key is given add it to the data
     if (Object.keys(datapoint).length != 0)
     {
       data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
     }
+
+    // if one of the filters has changed update the whole dataset
     if (currentsport != d3.select(".sportselect").property('value') || currentseason != d3.select(".seasonselect").property("value"))
     {
       countries = Object.keys(data)
@@ -414,56 +469,57 @@ function loadbar(dataobject)
       }
       currentsport = d3.select(".sportselect").property('value')
       currentseason = d3.select(".seasonselect").property("value")
+     }
+
+      // calculate the scales
+      xscale = d3.scaleBand()
+                  .domain(Object.keys(data))
+                  .range([padding.left, barwidth - padding.right])
+                  .padding(0.02)
+
+      yscale = d3.scaleLinear()
+                  .domain([0, Math.max.apply(null, Object.values(data))])
+                  .range([barheight - padding.down, padding.up])
+                  .nice()
+
+      xaxis =  d3.axisBottom().scale(xscale)
+      yaxis = d3.axisLeft().scale(yscale)
+
+      d3.select(".barxaxis").transition().duration(750).call(xaxis)
+      d3.select('.baryaxis').transition().duration(750).call(yaxis)
+
+      // allow the user to click the ticks for removal
+      d3.select('.barchart').select(".barxaxis").selectAll('.tick')
+              .data(Object.keys(data))
+              .on('click', function(country)
+              {
+                removepoint(country)
+                window.removeline(country)
+              })
+
+      // update add or remove bars
+      bars = newsvg.selectAll("rect").data(Object.keys(data))
+      bars
+        .enter().append("rect").merge(bars)
+        .on("click", function(d)
+        {
+          removepoint(d)
+          window.removeline(d)
+        })
+        .transition().duration(750)
+        .style("fill", function(d) {return color(Object.keys(data).indexOf(d))})
+        .attr("x", function(d) { return xscale(d); })
+        .attr("width", xscale.bandwidth())
+        .attr("y", function(d) { return yscale(data[d])})
+        .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); })
+
+
+      bars.exit().remove()
 
     }
-    xscale = d3.scaleBand()
-                .domain(Object.keys(data))
-                .range([padding.left, barwidth - padding.right])
-                .padding(0.02)
-
-    yscale = d3.scaleLinear()
-                .domain([0, Math.max.apply(null, Object.values(data))])
-                .range([barheight - padding.down, padding.up])
-                .nice()
-
-
-
-    xaxis =  d3.axisBottom().scale(xscale)
-    yaxis = d3.axisLeft().scale(yscale)
-
-
-
-    d3.select(".barxaxis").transition().duration(750).call(xaxis)
-    d3.select('.baryaxis').transition().duration(750).call(yaxis)
-
-    d3.select('.barchart').select(".barxaxis").selectAll('.tick')
-            .data(Object.keys(data))
-            .on('click', function(country)
-            {
-              removepoint(country)
-              window.removeline(country)
-            })
-    bars = newsvg.selectAll("rect").data(Object.keys(data))
-    bars
-      .enter().append("rect").merge(bars)
-      .on("click", function(d)
-      {
-        removepoint(d)
-        window.removeline(d)
-      })
-      .transition().duration(750)
-      .style("fill", function(d) {return color(Object.keys(data).indexOf(d))})
-      .attr("x", function(d) { return xscale(d); })
-      .attr("width", xscale.bandwidth())
-      .attr("y", function(d) { return yscale(data[d])})
-      .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); })
-
-
-    bars.exit().remove()
-
-  }
 }
 
+// make the navigation buttons
 function makebuttons(sportslist)
 {
   seasonselect = d3.select("body").append("select").attr("class", "seasonselect").on("change", onchange)
@@ -482,11 +538,13 @@ function makebuttons(sportslist)
   d3.select("body").append("a").attr("class", "about").attr("href", "pages/aboutdata.html").text("about data")
 }
 
+// to call the script
 window.onload = function load()
 {
    dataHandler()
  }
 
+// initialise all the graphs
 function dataHandler()
 {
    promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
@@ -564,7 +622,7 @@ function calculatevalues(data, countryFilter, graph)
  return object
 }
 
-
+// if a change is made to the filters
 function onchange()
 {
   window.updateheatmap()
@@ -572,6 +630,7 @@ function onchange()
   window.updateline()
 }
 
+// function to color code the bars and lines
 function colormaker()
 {
   var color = d3.scaleOrdinal(d3.schemeCategory10);
