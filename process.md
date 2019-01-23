@@ -131,3 +131,5 @@ colors fixed.
 removed transition from the bar chart because it was weird.
 
 updated bar chart and line chart
+
+Tooltip update to be the same as the heatmap tooltip

@@ -236,14 +236,14 @@ function loadline(yeararray)
   // removes the tooltip
   function removeTooltip()
   {
-    d3.select(".tooltip").selectAll("text").remove()
+    d3.select(".tooltip").style("display", "none")
     d3.select(".tooltipline").attr("visibility", "hidden")
   }
 
   // draws the tooltip
   function drawTooltip()
   {
-
+    d3.select(".tooltip").style("display", "block")
     // draws the tool tip on the mouse postition and the line on the nearest year
     var mouseCoordinates = d3.mouse(this);
     var year = Math.round(xscale.invert(mouseCoordinates[0]))
