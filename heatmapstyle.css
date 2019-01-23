@@ -1,3 +1,21 @@
+.aboutdata
+{
+  position:fixed;
+  z-index: 100;
+}
+
+.aboutme
+{
+  position: fixed;
+  left: 100px;
+  z-index: 100;
+}
+.filtertext
+{
+  position: fixed;
+  left: 200px
+
+}
 .tooltip
 {
   position: absolute;
@@ -13,10 +31,7 @@
   fill: none;
   stroke-width: 2px;
 }
-.about
-{
-  position: fixed;
-}
+
 select
 {
     position: fixed;
@@ -24,11 +39,11 @@ select
 }
 .seasonselect
 {
-  left: 300px
+  left: 450px
 }
 .sportselect
 {
-  left: 100px
+  left: 250px
 }
 svg
 {
@@ -37,7 +52,7 @@ svg
 
 .barchart
 {
-  left: 650px
+  left: 700px
 }
 .names {
   fill: none;

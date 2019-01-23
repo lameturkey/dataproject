@@ -120,4 +120,14 @@ add tooltip for line chart
 
 
 # day 12
-##### 22
+##### 22/01/2019
+General fixing of code and using comments (Wow!!!)
+
+Maybe make colorcode better so the colors dont change when you click on countries??
+
+# day 13
+##### 23/01/2019
+colors fixed.
+removed transition from the bar chart because it was weird.
+
+updated bar chart and line chart

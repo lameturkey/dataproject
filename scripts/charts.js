@@ -140,7 +140,7 @@ function loadline(yeararray)
   // variables for the line graph
   var yeararray = yeararray
   var yearsmaxvalue = 0
-  var lineheight = 300
+  var lineheight = 220
   var linewidth = 1250
   var lines = []
   var countrylist = []
@@ -150,11 +150,11 @@ function loadline(yeararray)
     left: 30,
     right: 100,
     up: 1,
-    down: 30
+    down: 25
   }
 
   // produce the barebones line chart
-  d3.select("body").append("svg").style("top", 380).style("position", "relative").attr("class", "linechart")
+  d3.select("body").append("svg").style("top", 350).style("position", "relative").attr("class", "linechart")
     .attr("width", linewidth).attr("height", lineheight)
 
 
@@ -397,7 +397,7 @@ function loadline(yeararray)
     currentlines.enter().append("path").merge(currentlines)
       .attr("class", "line")
       .attr("d", line)
-      .attr("stroke", function(d) {return color(lines.indexOf(d))})
+      .attr("stroke", function(d) {return color(countrylist[lines.indexOf(d)])})
 
     currentlines.exit().remove()
 
@@ -506,8 +506,7 @@ function loadbar(dataobject)
           removepoint(d)
           window.removeline(d)
         })
-        .transition().duration(750)
-        .style("fill", function(d) {return color(Object.keys(data).indexOf(d))})
+        .style("fill", function(d) {return color(d)})
         .attr("x", function(d) { return xscale(d); })
         .attr("width", xscale.bandwidth())
         .attr("y", function(d) { return yscale(data[d])})
@@ -534,15 +533,14 @@ function makebuttons(sportslist)
     sportselect.append("option").text(sportslist[item]).attr('value', sportslist[item]);
   }
 
-  d3.select("body").append("a").attr("class", "about").attr("href", "pages/aboutme.html").text("about me")
-  d3.select("body").append("a").attr("class", "about").attr("href", "pages/aboutdata.html").text("about data")
+  d3.select("body").append("a").attr("class", "aboutme").attr("href", "pages/aboutme.html").text("about me")
+  d3.select("body").append("text").attr("class", "filtertext").text("Filters:")
+  d3.select("body").append("a").attr("class", "aboutdata").attr("href", "pages/aboutdata.html").text("about data")
 }
 
 // to call the script
-window.onload = function load()
-{
-   dataHandler()
- }
+window.onload = dataHandler
+
 
 // initialise all the graphs
 function dataHandler()
@@ -618,7 +616,6 @@ function calculatevalues(data, countryFilter, graph)
    object[country] = counter
   }
  })
- console.log(object)
  return object
 }
 
@@ -633,9 +630,15 @@ function onchange()
 // function to color code the bars and lines
 function colormaker()
 {
+  colorobject = {}
   var color = d3.scaleOrdinal(d3.schemeCategory10);
   return function(x)
   {
-    return color(x)
+    console.log(x)
+    if (!(Object.keys(colorobject).includes(x)))
+    {
+      colorobject[x] = Object.keys(colorobject).length
+    }
+      return color(colorobject[x])
   }
 }
