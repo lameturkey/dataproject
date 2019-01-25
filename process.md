@@ -133,3 +133,17 @@ removed transition from the bar chart because it was weird.
 updated bar chart and line chart
 
 Tooltip update to be the same as the heatmap tooltip
+
+# day 14
+##### 24/01/2019
+hackaton
+
+# day 15
+##### 25/01/2019
+I need some sort of explanation to the graphs. and axistitles intro slideshow.
+
+make button to remove all lines and bars
+
+also fix the line tooltips for consistancy
+
+use the width and height of the window

@@ -14,9 +14,8 @@ function loadheatmap(countrybyname, geojson)
               })
 
   // graph padding
-  var margin = {top: 0, right: 0, bottom: 0, left: 0},
-              width = 672 - margin.left - margin.right,
-              height = 350 - margin.top - margin.bottom;
+              width = (window.innerWidth / 2)
+              height = (window.innerHeight / 10) * 6
 
   // color coding used for opacity
   var hue = d3.scaleLinear()
@@ -140,8 +139,6 @@ function loadline(yeararray)
   // variables for the line graph
   var yeararray = yeararray
   var yearsmaxvalue = 0
-  var lineheight = 220
-  var linewidth = 1250
   var lines = []
   var countrylist = []
   var currentsport = d3.select(".sportselect").property('value')
@@ -152,9 +149,11 @@ function loadline(yeararray)
     up: 1,
     down: 25
   }
+  lineheight = (window.innerHeight / 10) * 4
+  linewidth = (window.innerWidth)
 
   // produce the barebones line chart
-  d3.select("body").append("svg").style("top", 350).style("position", "relative").attr("class", "linechart")
+  d3.select("body").append("svg").style("top", window.innerHeight / 10 * 6).style("position", "relative").attr("class", "linechart")
     .attr("width", linewidth).attr("height", lineheight)
 
 
@@ -293,11 +292,11 @@ function loadline(yeararray)
                 // formatting of the tooltip
                 if (d != "year")
                 {
-                  return d + ": " + object[d] + " <br> "
+                  return d + ": " + "<b><span class='details'>" + object[d] + "</b> </span> <br> "
                 }
                 else
                   {
-                    return "<b>" + object[d] + "</b> <br>"
+                    return "<b><span class='details'>" + object[d] + "</span> </b> <br>"
                   }
             })
 
@@ -310,7 +309,11 @@ function loadline(yeararray)
               .attr("y1", lineheight - padding.down)
               .attr("y2", padding.up)
       }
+    else {
+      removeTooltip()
+      }
   }
+
 
   // update function of the line graph takes an object with data from calculate values.
   return function(object)
@@ -409,20 +412,21 @@ function loadline(yeararray)
 // function to load a bar chart and returns a function to update said bar chart
 function loadbar(dataobject)
 {
-  var barwidth = 500
-  var barheight = 350
   var padding = {
     left: 35,
     up: 5,
     down: 20,
     right: 1
   }
+  barwidth = (window.innerWidth / 2);
+  barheight = (window.innerHeight / 10) * 6;
+
   var data = {}
   var currentsport = d3.select(".sportselect").property('value')
   var currentseason = d3.select(".seasonselect").property("value")
 
   var newsvg = d3.select("body").append("svg").attr("class", "barchart")
-      .attr("width", 500).attr("height", 350);
+      .attr("width", 500).attr("height", 350).style("left", window.innerWidth/2)
   var xscale = d3.scaleOrdinal()
               .range([padding.left, barwidth - padding.right])
   var yscale = d3.scaleLinear()
