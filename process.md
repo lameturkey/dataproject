@@ -151,3 +151,5 @@ use the width and height of the window
 use width and height now working.
 fixed the line tooltips to reflect better on the heatmap tooltips.
 Introduced a slideshow at load of the page
+
+button to remove all countries doesn't add value to the graph

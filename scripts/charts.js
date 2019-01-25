@@ -148,7 +148,7 @@ function loadline(yeararray)
   var padding = {
     left: 30,
     right: 30,
-    up: 1,
+    up: 3,
     down: 25
   }
 
@@ -673,9 +673,10 @@ function tutorial()
     console.log(i)
     d3.select(".image").attr("src", "docs/tutorial"+ i + ".png")
     i = i + 1
-    if (i > 4)
+    if (i > 5)
     {
       d3.select(".image").remove()
+      d3.select(".skipbutton").remove()
       return
     }
     setTimeout(slideshow, 4000, i)
