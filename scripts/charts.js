@@ -665,7 +665,7 @@ function tutorial()
       d3.select(".image").remove()
       return
     }
-    setTimeout(slideshow, 3000, i)
+    setTimeout(slideshow, 5000, i)
   }
 
 
