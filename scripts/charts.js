@@ -153,7 +153,7 @@ function loadline(yeararray)
   }
 
   // produce the barebones line chart
-  d3.select("body").append("svg").style("top", 350).style("position", "relative").attr("class", "linechart")
+  d3.select("body").append("svg").style("top", window.innerHeight / 10 * 6).style("position", "relative").attr("class", "linechart")
     .attr("width", linewidth).attr("height", lineheight)
 
 
