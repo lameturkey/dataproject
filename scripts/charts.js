@@ -548,10 +548,10 @@ window.onload = dataHandler
 // initialise all the graphs
 function dataHandler()
 {
+  tutorial()
    promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
    Promise.all(promises).then(function(values)
    {
-    tutorial()
     yearlist = values[3]
     window.color = colormaker()
     window.updateheatmap = function(x) {}
@@ -649,10 +649,23 @@ function colormaker()
 
 function tutorial()
 {
+  d3.select("body").append("button")
+                   .attr("class", "skipbutton")
+                   .on("click", function()
+                 {
+                   d3.select(".skipbutton").remove()
+                   d3.select(".image").remove()
+                 })
+                   .text("SKIP")
+
   d3.select("body").append("img")
                    .attr("class", "image")
                    .attr("width", window.innerWidth - 50)
                    .attr("height", window.innerHeight- 10);
+
+
+
+
   i = 0
   slideshow(i)
   function slideshow(i)
@@ -660,12 +673,12 @@ function tutorial()
     console.log(i)
     d3.select(".image").attr("src", "docs/tutorial"+ i + ".png")
     i = i + 1
-    if (i > 3)
+    if (i > 4)
     {
       d3.select(".image").remove()
       return
     }
-    setTimeout(slideshow, 5000, i)
+    setTimeout(slideshow, 4000, i)
   }
 
 
