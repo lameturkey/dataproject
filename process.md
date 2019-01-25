@@ -147,3 +147,7 @@ make button to remove all lines and bars
 also fix the line tooltips for consistancy
 
 use the width and height of the window
+
+use width and height now working.
+fixed the line tooltips to reflect better on the heatmap tooltips.
+Introduced a slideshow at load of the page
