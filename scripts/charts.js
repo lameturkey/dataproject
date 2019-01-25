@@ -14,8 +14,8 @@ function loadheatmap(countrybyname, geojson)
               })
 
   // graph padding
-              width = (window.innerWidth / 2)
-              height = (window.innerHeight / 10) * 6
+              width = window.innerWidth / 100 * 50
+              height = window.innerHeight / 10 * 6
 
   // color coding used for opacity
   var hue = d3.scaleLinear()
@@ -139,21 +139,21 @@ function loadline(yeararray)
   // variables for the line graph
   var yeararray = yeararray
   var yearsmaxvalue = 0
+  var linewidth = window.innerWidth - 50
+  var lineheight = window.innerHeight / 10 * 4 - 10
   var lines = []
   var countrylist = []
   var currentsport = d3.select(".sportselect").property('value')
   var currentseason = d3.select(".seasonselect").property("value")
   var padding = {
     left: 30,
-    right: 100,
+    right: 30,
     up: 1,
     down: 25
   }
-  lineheight = (window.innerHeight / 10) * 4
-  linewidth = (window.innerWidth)
 
   // produce the barebones line chart
-  d3.select("body").append("svg").style("top", window.innerHeight / 10 * 6).style("position", "relative").attr("class", "linechart")
+  d3.select("body").append("svg").style("top", 350).style("position", "relative").attr("class", "linechart")
     .attr("width", linewidth).attr("height", lineheight)
 
 
@@ -412,21 +412,20 @@ function loadline(yeararray)
 // function to load a bar chart and returns a function to update said bar chart
 function loadbar(dataobject)
 {
+  barwidth = window.innerWidth / 100 * 50 - 50
+  barheight = window.innerHeight / 10 * 6
   var padding = {
     left: 35,
     up: 5,
     down: 20,
     right: 1
   }
-  barwidth = (window.innerWidth / 2);
-  barheight = (window.innerHeight / 10) * 6;
-
   var data = {}
   var currentsport = d3.select(".sportselect").property('value')
   var currentseason = d3.select(".seasonselect").property("value")
 
   var newsvg = d3.select("body").append("svg").attr("class", "barchart")
-      .attr("width", 500).attr("height", 350).style("left", window.innerWidth/2)
+      .attr("width", barwidth).attr("height", barheight).style("left", window.innerWidth / 100 * 50);
   var xscale = d3.scaleOrdinal()
               .range([padding.left, barwidth - padding.right])
   var yscale = d3.scaleLinear()
