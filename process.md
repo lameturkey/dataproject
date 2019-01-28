@@ -167,3 +167,5 @@ Code needs fixing: all load functions should behave the same. (loadbar needs {} 
 not all missing data points are assined a 0 medal value (FIXED it was only 1992)
 
 tooltip is on a weird position not on my screen but on other ratios
+
+added favicon from https://www.favicon.cc/?action=icon&file_id=38992

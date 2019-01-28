@@ -34,16 +34,16 @@ function loadline(yeararray)
       .on('mouseout', removeTooltip);
 
   // initialise the tooltip line
-  const tooltipLine = d3.line()
+  var tooltipLine = d3.line()
                       .x(d => x(d.year))
                       .y(d => y(d.medals));
 
 
-    // line template
-    line = d3.line().x(function(d){return xscale(d.year)})
+  // line template
+  var line = d3.line().x(function(d){return xscale(d.year)})
                     .y(function(d){return yscale(d.medals)})
 
- // placeholder axises
+  // placeholder axises
   var xscale = d3.scaleLinear()
                .range([padding.left, linewidth - padding.right])
                .domain([])
@@ -264,8 +264,6 @@ function loadline(yeararray)
     d3.select(".linexaxis").transition().call(xaxis)
     d3.select(".lineyaxis").transition().call(yaxis)
 
-
-
     currentlines = linesvg.selectAll(".line").data(lines)
 
     currentlines.enter().append("path").merge(currentlines)
@@ -274,8 +272,5 @@ function loadline(yeararray)
       .attr("stroke", function(d) {return color(countrylist[lines.indexOf(d)])})
 
     currentlines.exit().remove()
-
-
-
   }
 }
