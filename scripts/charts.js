@@ -1,3 +1,33 @@
+
+// to call the script
+window.onload = dataHandler
+
+// initialise all the graphs
+function dataHandler()
+{
+  tutorial()
+   promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
+   Promise.all(promises).then(function(values)
+   {
+    yearlist = values[3];
+    window.color = colormaker();
+    window.updateheatmap = function(x) {};
+    sportslist = values[2].sort();
+    sportslist.unshift("All");
+    geojson = values[0];
+    data = values[1];
+    makebuttons(sportslist);
+    datalist =  calculatevalues(data, "", "bar");
+    window.updateheatmap = loadheatmap(datalist, geojson);
+    window.updatebar = loadbar();
+    window.updateline = loadline(yearlist);
+    window.requestdata = function(country, kind)
+    {
+        return calculatevalues(data, country, kind);
+    }
+   });
+ }
+
 function loadheatmap(countrybyname, geojson)
 {
 
@@ -18,9 +48,9 @@ function loadheatmap(countrybyname, geojson)
               height = window.innerHeight / 10 * 6
 
   // color coding used for opacity
-  var hue = d3.scaleLinear()
+  var opacity = d3.scaleLinear()
       .domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
-      .range([0.1, 1])
+      .range([0.05, 1])
 
   // produce svg
   var svg = d3.select("body")
@@ -59,7 +89,7 @@ function loadheatmap(countrybyname, geojson)
       .style("opacity", function(d) {
         if (d.value != undefined)
         {
-          return hue(d.value)
+          return opacity(d.value)
         }
         return 0
       })
@@ -111,8 +141,8 @@ function loadheatmap(countrybyname, geojson)
 
       // update the opacity scale and set the new values for each country
       countrybyname = calculatevalues(data, "", "bar")
-      hue.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
-          .range([0.1, 1])
+      opacity.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
+          .range([0.05, 1])
 
       geojson.features.forEach(function(d) {
           d.value = countrybyname[d.properties.name]
@@ -124,7 +154,7 @@ function loadheatmap(countrybyname, geojson)
         .style("opacity", function(d) {
               if (d.value != undefined)
               {
-                return hue(d.value)
+                return opacity(d.value)
               }
               return 0
             })
@@ -172,6 +202,7 @@ function loadline(yeararray)
                       .x(d => x(d.year))
                       .y(d => y(d.medals));
 
+ // placeholder axises
   var xscale = d3.scaleLinear()
                .range([padding.left, linewidth - padding.right])
                .domain([])
@@ -199,7 +230,7 @@ function loadline(yeararray)
         window.updateline()
       }
 
-  // function to set all year where no medal was won to 0 instead of no data
+  // function to set all years where no medal was won to 0 instead of no data
   function addemptyyears(object)
   {
     var currentseason = d3.select(".seasonselect").property("value")
@@ -211,7 +242,7 @@ function loadline(yeararray)
       {
         return false
       }
-      if (value < 1992)
+      if (value <= 1992)
       {
         return true
       }
@@ -251,11 +282,11 @@ function loadline(yeararray)
     // finds the nearest  year from the cursor location
     lines.forEach(function(line)
     {
-        line.forEach(function(datapoint)
+        line.forEach(function(point)
         {
-          if (Math.abs(year - datapoint.year) < Math.abs(year - nearestyear))
+          if (Math.abs(year - point.year) < Math.abs(year - nearestyear))
           {
-            nearestyear = datapoint.year
+            nearestyear = point.year
           }
         })
     })
@@ -265,11 +296,11 @@ function loadline(yeararray)
     object["year"] = nearestyear
     lines.forEach(function(line)
     {
-        line.forEach(function(datapoint)
+        line.forEach(function(point)
         {
-          if (datapoint.year == nearestyear)
+          if (point.year == nearestyear)
           {
-            object[countrylist[lines.indexOf(line)]] = datapoint.medals
+            object[countrylist[lines.indexOf(line)]] = point.medals
           }
         })
     })
@@ -280,10 +311,9 @@ function loadline(yeararray)
       text = d3.select(".tooltip")
                .style("left", (mouseCoordinates[0] + 20 + padding.left) + "px")
                .style("top", (mouseCoordinates[1] + 10 + 350) + "px")
-               .selectAll("text")
+               .selectAll("text").data(Object.keys(object))
 
-      text.data(Object.keys(object))
-          .enter()
+      text.enter()
           .append("text")
           .merge(text)
           .attr("y", (d, i) => i * 20)
@@ -299,7 +329,7 @@ function loadline(yeararray)
                     return "<b><span class='details'>" + object[d] + "</span> </b> <br>"
                   }
             })
-
+        text.exit().remove()
       // adjust the line
       linesvg.select("line").attr("class", "tooltipline")
               .style("stroke", "black")
@@ -309,9 +339,10 @@ function loadline(yeararray)
               .attr("y1", lineheight - padding.down)
               .attr("y2", padding.up)
       }
-    else {
+    else
+    {
       removeTooltip()
-      }
+    }
   }
 
 
@@ -340,7 +371,7 @@ function loadline(yeararray)
       currentseason = d3.select(".seasonselect").property("value")
     }
 
-    // if and object is given turn it into a format that can be used to draw a line
+    // if an object is given turn it into a format that can be used to draw a line
     if (object !== undefined)
     {
         name = object[0]
@@ -349,7 +380,7 @@ function loadline(yeararray)
         {
           return
         }
-        addemptyyears(object)
+        object = addemptyyears(object)
         maxvalue = Math.max.apply(null, Object.values(object))
         if (maxvalue > yearsmaxvalue)
         {
@@ -444,15 +475,15 @@ function loadbar(dataobject)
   function removepoint(country)
   {
     delete data[country];
-    updatebar({})
+    updatebar()
   }
 
   // return function that updates this bar chart
   return function (datapoint)
   {
 
-    // if a key is given add it to the data
-    if (Object.keys(datapoint).length != 0)
+    // if a object is given add it to the data
+    if (datapoint != undefined)
     {
       data[Object.keys(datapoint)[0]] = Object.values(datapoint)[0]
     }
@@ -541,35 +572,7 @@ function makebuttons(sportslist)
   d3.select("body").append("a").attr("class", "aboutdata").attr("href", "pages/aboutdata.html").text("about data")
 }
 
-// to call the script
-window.onload = dataHandler
 
-
-// initialise all the graphs
-function dataHandler()
-{
-  tutorial()
-   promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
-   Promise.all(promises).then(function(values)
-   {
-    yearlist = values[3]
-    window.color = colormaker()
-    window.updateheatmap = function(x) {}
-    sportslist = values[2].sort()
-    sportslist.unshift("All")
-    geojson = values[0]
-    data = values[1]
-    makebuttons(sportslist)
-    datalist =  calculatevalues(data, "", "bar")
-    window.updateheatmap = loadheatmap(datalist, geojson)
-    window.updatebar = loadbar()
-    window.updateline = loadline(yearlist)
-    window.requestdata = function(country, kind)
-    {
-        return calculatevalues(data, country, kind)
-    }
-   });
- }
 
 // calculates the (filtered) values for all graphs
 function calculatevalues(data, countryFilter, graph)
@@ -638,7 +641,6 @@ function colormaker()
   var color = d3.scaleOrdinal(d3.schemeCategory10);
   return function(x)
   {
-    console.log(x)
     if (!(Object.keys(colorobject).includes(x)))
     {
       colorobject[x] = Object.keys(colorobject).length
@@ -670,7 +672,6 @@ function tutorial()
   slideshow(i)
   function slideshow(i)
   {
-    console.log(i)
     d3.select(".image").attr("src", "docs/tutorial"+ i + ".png")
     i = i + 1
     if (i > 5)

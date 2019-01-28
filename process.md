@@ -153,3 +153,17 @@ fixed the line tooltips to reflect better on the heatmap tooltips.
 Introduced a slideshow at load of the page
 
 button to remove all countries doesn't add value to the graph
+
+# day 16
+# 28/01/2019
+
+Bugs:
+everything that has been clicked is in the tooltip (fixed)
+
+no update when filtering summer or winter. (fixed)
+
+Code needs fixing: all load functions should behave the same. (loadbar needs {} (fixed))
+
+not all missing data points are assined a 0 medal value (FIXED it was only 1992)
+
+tooltip is on a weird position not on my screen but on other ratios
