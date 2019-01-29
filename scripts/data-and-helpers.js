@@ -8,7 +8,7 @@ function dataHandler()
 
   // startup tutorial
   tutorial()
-  promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
+  promises = [d3.json("../data/world_countries.json"), d3.json("../data/output.json"), d3.json("../data/sportslist.json"), d3.json("../data/yearlist.json")]
   Promise.all(promises).then(function(values)
   {
 
@@ -176,7 +176,7 @@ function tutorial()
      d3.select(".skipbutton").remove()
      return
    }
-   d3.select(".image").attr("src", "docs/tutorial"+ i + ".png")
+   d3.select(".image").attr("src", "../docs/tutorial"+ i + ".png")
    i = i + 1
 
    setTimeout(slideshow, 4000, i)

@@ -4,14 +4,10 @@ import json
 athletefile = "athlete_events.csv"
 populationfile = "poulation.csv"
 
-
-#isolate the relevant values
-keys = ["NOC", "Games", "Sport","Event","Medal"]
-
-# json object should have these keys
-medals = ["Gold", "Silver", "Bronze"]
-
 def reader(filename):
+
+    #isolate the relevant values
+    keys = ["NOC", "Games", "Sport","Event","Medal"]
     dicts = []
 
 
@@ -29,6 +25,8 @@ def reader(filename):
 
 
 def clean(athletes):
+    # json object should have these keys
+    medals = ["Gold", "Silver", "Bronze"]
 
     # remove all duplicate athletes turning it into the events by each country participated in
     events = [dict(touple) for touple in set(tuple(dict.items()) for dict in athletes if dict["Medal"] != "NA")]
@@ -56,38 +54,6 @@ def savejson(dictionaries, name):
     with open(name, 'w+') as jsonfile:
         json.dump(dictionaries, jsonfile, indent=4)
 
-# def addpop(struct):
-#     with open("population.csv", "r") as csvfile:
-#         dict = csv.DictReader(csvfile)
-#         errorlist = []
-#         for row in dict:
-#
-#             # store relevant variables
-#             code = row["Country Code"]
-#             year = row["Year"]
-#             value = row["Value"]
-#
-#
-#             # assign each value to the correct place
-#             try:
-#                 keys = struct[code].keys()
-#             except KeyError:
-#                 keys = []
-#                 errorlist.append(code)
-#
-#             for key in keys:
-#                 key = key.split(' ')
-#                 if year == key[0]:
-#                     try:
-#                         struct[code][key[0] + " " + key[1]]["population"] = value
-#                     except KeyError:
-#                         pass
-#
-#
-#
-#         print(set(errorlist))
-#         return struct
-
 def convert(list):
     with open("conversion.json", "r") as jsonfile:
         conversionlist = json.load(jsonfile)
@@ -107,7 +73,6 @@ def savefilters(athletes):
                 for sport in athletes[country][game][medal]:
                     if sport not in sportslist:
                         sportslist.append(sport)
-    print(sportslist)
     return sportslist
 
 def saveyears(athletes):
@@ -117,7 +82,6 @@ def saveyears(athletes):
             game = game.split(" ")[0]
             if game not in yearlist:
                 yearlist.append(game)
-    print(yearlist)
     return yearlist
 
 def hardcode(athletes):
@@ -128,13 +92,26 @@ def hardcode(athletes):
     return athletes
 
 if __name__ == '__main__':
+
+    # read the file
     athletes = reader(athletefile)
+
+    # clean the file
     athletes = clean(athletes)
+
+    # convert the file (NOC -> country conversion)
     athletes = convert(athletes)
+
+    # make hardcoded adjustments to the countries that have different names for some reason
     athletes = hardcode(athletes)
-    print(athletes.keys())
+
+    #  save the output (datajson)
     savejson(athletes, "output.json")
+
+    # save all the sports
     sportslist = savefilters(athletes)
     savejson(sportslist, "sportslist.json")
+
+    # save all the years
     years = saveyears(athletes)
     savejson(years, "yearlist.json")

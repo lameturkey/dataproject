@@ -42,6 +42,7 @@ function loadbar(dataobject)
   // function that removes a bar from the bar chart ()
   function removepoint(country)
   {
+    console.log(data)
     delete data[country];
     updatebar()
   };
@@ -92,9 +93,10 @@ function loadbar(dataobject)
 
       // allow the user to click the ticks for removal
       d3.select('.barchart').select(".barxaxis").selectAll('.tick')
-              .data(Object.keys(data))
+              .data(Object.keys(data), function(d) { return d })
               .on('click', function(country)
               {
+                this.remove()
                 removepoint(country)
                 window.removeline(country)
               });

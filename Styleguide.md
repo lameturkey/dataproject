@@ -31,6 +31,10 @@ d3.select("lol")
 Behalve als de chaining kort genoeg is eg.
 d3.select("lol").method()
 
+of selections
+d3.select("lol").selectAll("hue")
+                .method()
+
 ### regal 6
 Multi line comment voor elke functie
 

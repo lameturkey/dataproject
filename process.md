@@ -183,4 +183,9 @@ fixing of the format of the axistitle (done)
 add axis title to other graph ( done)
 and code improvements (..)
 fix the scale of the world map on weird scales (done)
-als je over een line hovered is er geen tooltip (fix dit)
+als je over een line hovered is er geen tooltip (done)
+
+als muis over 80% width maak de div links niet rechts in de line chart
+
+fixed a bug where spam clicking the axis title will cause everything to dissapear
+fix file structure van de github repo (...)
