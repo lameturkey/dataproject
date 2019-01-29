@@ -169,3 +169,13 @@ not all missing data points are assined a 0 medal value (FIXED it was only 1992)
 tooltip is on a weird position not on my screen but on other ratios
 
 added favicon from https://www.favicon.cc/?action=icon&file_id=38992
+
+------
+TODO:
+fixing of the format of the axistitle
+add axis title to other graph
+and code improvements
+
+# day 17
+# 29/01/2019
+fix the scale of the world map on weird scales

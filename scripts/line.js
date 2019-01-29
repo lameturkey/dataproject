@@ -151,7 +151,7 @@ function loadline(yeararray)
     {
       text = d3.select(".tooltip")
                .style("left", (mouseCoordinates[0] + 20 + padding.left) + "px")
-               .style("top", (mouseCoordinates[1] + 10 + 350) + "px")
+               .style("top", (mouseCoordinates[1] + window.innerHeight / 10 * 6) + "px")
                .selectAll("text").data(Object.keys(object))
 
       text.enter()

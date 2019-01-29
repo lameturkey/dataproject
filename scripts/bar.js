@@ -5,7 +5,7 @@ function loadbar(dataobject)
   barheight = window.innerHeight / 10 * 6;
   var padding =
   {
-    left: 35,
+    left: 55,
     up: 5,
     down: 20,
     right: 1
@@ -14,7 +14,7 @@ function loadbar(dataobject)
   var currentsport = d3.select(".sportselect").property('value');
   var currentseason = d3.select(".seasonselect").property("value");
 
-  var newsvg = d3.select("body").append("svg").attr("class", "barchart")
+  var barsvg = d3.select("body").append("svg").attr("class", "barchart")
       .attr("width", barwidth).attr("height", barheight).style("left", window.innerWidth / 100 * 50);
   var xscale = d3.scaleOrdinal()
               .range([padding.left, barwidth - padding.right]);
@@ -24,11 +24,19 @@ function loadbar(dataobject)
   var xaxis =  d3.axisBottom().scale(xscale);
   var yaxis = d3.axisLeft().scale(yscale);
 
-  newsvg.append("g").attr("class", "barxaxis")
-                    .call(xaxis).attr("transform", "translate(0," + (barheight - padding.down) + ")");
-  newsvg.append("g").attr("class", "baryaxis")
-                    .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)");
+  barsvg.append("g")
+         .attr("class", "barxaxis")
+         .call(xaxis).attr("transform", "translate(0," + (barheight - padding.down) + ")");
 
+  barsvg.append("g")
+         .attr("class", "baryaxis")
+         .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)");
+
+  barsvg.append("text")
+         .attr("transform", "rotate(-90)")
+         .attr("x", -barheight / 1.5)
+         .attr("y", padding.left / 3)
+         .text("Total Medals")
 
   // function that removes a bar from the bar chart ()
   function removepoint(country)
@@ -91,7 +99,7 @@ function loadbar(dataobject)
               });
 
       // update add or remove bars
-      bars = newsvg.selectAll("rect").data(Object.keys(data));
+      bars = barsvg.selectAll("rect").data(Object.keys(data));
       bars
         .enter().append("rect").merge(bars)
         .on("click", function(d)

@@ -146,14 +146,15 @@ function dataHandler()
    slideshow(i)
    function slideshow(i)
    {
-     d3.select(".image").attr("src", "docs/tutorial"+ i + ".png")
-     i = i + 1
-     if (i > 5)
+     if (i > 3 )
      {
        d3.select(".image").remove()
        d3.select(".skipbutton").remove()
        return
      }
+     d3.select(".image").attr("src", "docs/tutorial"+ i + ".png")
+     i = i + 1
+
      setTimeout(slideshow, 4000, i)
    }
 
