@@ -1,8 +1,8 @@
 // function to load a bar chart and returns a function to update said bar chart
 function loadbar(dataobject)
 {
-  barwidth = window.innerWidth / 100 * 50 - 50;
-  barheight = window.innerHeight / 10 * 6;
+  var barwidth = window.innerWidth / 100 * 50 - 50;
+  var barheight = window.innerHeight / 10 * 6;
   var padding =
   {
     left: 55,
@@ -100,21 +100,22 @@ function loadbar(dataobject)
               });
 
       // update add or remove bars
-      bars = barsvg.selectAll("rect").data(Object.keys(data));
-      bars
-        .enter().append("rect").merge(bars)
-        .on("click", function(d)
-        {
-          removepoint(d)
-          window.removeline(d)
-        })
-        .style("fill", function(d) {return color(d)})
-        .attr("x", function(d) { return xscale(d); })
-        .attr("width", xscale.bandwidth())
-        .attr("y", function(d) { return yscale(data[d])})
-        .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); });
+      var bars = barsvg.selectAll("rect").data(Object.keys(data));
+      bars.enter()
+          .append("rect")
+          .merge(bars)
+          .on("click", function(d)
+            {
+              removepoint(d)
+              window.removeline(d)
+            })
+          .style("fill", function(d) {return color(d)})
+          .attr("x", function(d) { return xscale(d); })
+          .attr("width", xscale.bandwidth())
+          .attr("y", function(d) { return yscale(data[d])})
+          .attr("height", function(d) { return barheight - padding.down - yscale(data[d]); });
 
-
+      // remove excess bars
       bars.exit().remove();
 
     }

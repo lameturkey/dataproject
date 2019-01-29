@@ -42,21 +42,35 @@ function dataHandler()
  // make the navigation buttons
  function navbar(sportslist)
  {
+
+   // season dropdown
    seasonselect = d3.select("body").append("select").attr("class", "seasonselect").on("change", onchange)
 
    seasonselect.append("option").text("All").attr("value", "All")
    seasonselect.append("option").text("Winter").attr("value", "Winter")
    seasonselect.append("option").text("Summer").attr("value", "Summer")
 
+   // sport dropdown
    sportselect = d3.select("body").append("select").attr("class", "sportselect").on("change", onchange)
    for (var item in sportslist)
    {
      sportselect.append("option").text(sportslist[item]).attr('value', sportslist[item]);
    }
 
-   d3.select("body").append("a").attr("class", "aboutme").attr("href", "pages/aboutme.html").text("about me")
-   d3.select("body").append("text").attr("class", "filtertext").text("Filters:")
-   d3.select("body").append("a").attr("class", "aboutdata").attr("href", "pages/aboutdata.html").text("about data")
+   // other links
+   d3.select("body").append("a")
+                    .attr("class", "aboutme")
+                    .attr("href", "pages/aboutme.html")
+                    .text("about me")
+
+   d3.select("body").append("text")
+                    .attr("class", "filtertext")
+                    .text("Filters:")
+
+   d3.select("body").append("a")
+                    .attr("class", "aboutdata")
+                    .attr("href", "pages/aboutdata.html")
+                    .text("about data")
  }
 
  // calculates the (filtered) values for all graphs
@@ -73,8 +87,8 @@ function dataHandler()
      sportsFilter = ""
    }
    object = {};
-  Object.keys(data).forEach(function(country)
-  {
+   Object.keys(data).forEach(function(country)
+   {
     counter = 0
     if (countryFilter === "" || countryFilter === country)
     {
@@ -89,10 +103,10 @@ function dataHandler()
               if (sportsFilter === "" || sportsFilter === sport)
               {
                counter += parseInt(data[country][game][medal][sport])
-               }
+              }
 
             })
-          })
+           })
           if (graph === "line")
           {
              object[game.split(" ")[0]] = object[game.split(" ")[0]] || 0
@@ -100,7 +114,6 @@ function dataHandler()
              counter = 0
           }
         }
-
       })
      }
    if (counter != 0)

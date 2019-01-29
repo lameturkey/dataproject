@@ -1,5 +1,3 @@
-
-
 function loadheatmap(countrybyname, geojson)
 {
 

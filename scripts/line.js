@@ -1,16 +1,16 @@
 // loads the line graph as just axis and returns the function that updates the line graph
-function loadline(yeararray)
+function loadline(yearArray)
 {
 
   // variables for the line graph
-  var yeararray = yeararray
-  var yearsmaxvalue = 0
-  var linewidth = window.innerWidth - 50
-  var lineheight = window.innerHeight / 10 * 4 - 10
+  var yearArray = yearArray
+  var yearsMaxvalue = 0
+  var lineWidth = window.innerWidth - 50
+  var lineHeight = window.innerHeight / 10 * 4 - 10
   var lines = []
-  var countrylist = []
-  var currentsport = d3.select(".sportselect").property('value')
-  var currentseason = d3.select(".seasonselect").property("value")
+  var countryArray = []
+  var currentSport = d3.select(".sportselect").property('value')
+  var currentSeason = d3.select(".seasonselect").property("value")
   var padding = {
     left: 50,
     right: 30,
@@ -20,16 +20,16 @@ function loadline(yeararray)
 
   // produce the barebones line chart
   d3.select("body").append("svg").style("top", window.innerHeight / 10 * 6).style("position", "relative").attr("class", "linechart")
-    .attr("width", linewidth).attr("height", lineheight)
+    .attr("width", lineWidth).attr("height", lineHeight)
 
 
   linesvg = d3.select(".linechart")
   d3.select("body").append("div").attr("class", "tooltip")
 
   overlay = linesvg.append('rect')
-      .attr('width', linewidth)
-      .attr('height', lineheight)
-      .attr('opacity', 0)
+      .attr("class", "overlay")
+      .attr('width', lineWidth)
+      .attr('height', lineHeight)
       .on('mousemove', drawTooltip)
       .on('mouseout', removeTooltip);
 
@@ -45,11 +45,11 @@ function loadline(yeararray)
 
   // placeholder axises
   var xscale = d3.scaleLinear()
-               .range([padding.left, linewidth - padding.right])
+               .range([padding.left, lineWidth - padding.right])
                .domain([])
 
   var yscale = d3.scaleLinear()
-               .range([lineheight - padding.down, padding.up])
+               .range([lineHeight - padding.down, padding.up])
                .domain([])
 
   var xaxis =  d3.axisBottom().scale(xscale)
@@ -60,7 +60,7 @@ function loadline(yeararray)
   linesvg.append("g")
          .attr("class", "linexaxis")
          .call(xaxis)
-         .attr("transform", "translate(0," + (lineheight - padding.down) + ")");
+         .attr("transform", "translate(0," + (lineHeight - padding.down) + ")");
 
   linesvg.append("g")
          .attr("class", "lineyaxis")
@@ -70,34 +70,34 @@ function loadline(yeararray)
   linesvg.append("text")
         .attr("class", "axistitle")
         .attr("transform", "rotate(-90)")
-        .attr("x", -lineheight / 1.5)
+        .attr("x", -lineHeight / 1.5)
         .attr("y", padding.left / 3)
         .text("Total Medals")
 
   linesvg.append("text")
          .attr("class", "axistitle")
-         .attr("y", lineheight - padding.down / 2)
-         .attr("x", linewidth / 2)
+         .attr("y", lineHeight - padding.down / 2)
+         .attr("x", lineWidth / 2)
          .text("Year")
 
   // function to remove a line and assign it to the window so it can be used everywere
   window.removeline = function removeline(country)
       {
-        var index = countrylist.indexOf(country);
-        countrylist.splice(index, 1);
+        var index = countryArray.indexOf(country);
+        countryArray.splice(index, 1);
         lines.splice(index, 1);
         window.updateline()
       }
 
   // function to set all years where no medal was won to 0 instead of no data
-  function addemptyyears(object)
+  function addemptyYears(object)
   {
-    var currentseason = d3.select(".seasonselect").property("value")
-    var currentyears = Object.keys(object)
+    var currentSeason = d3.select(".seasonselect").property("value")
+    var currentYears = Object.keys(object)
 
-    var emptyyears = yeararray.filter(function(value, index, arr)
+    var emptyYears = yearArray.filter(function(value, index, arr)
     {
-      if (currentyears.includes(value))
+      if (currentYears.includes(value))
       {
         return false
       }
@@ -105,17 +105,17 @@ function loadline(yeararray)
       {
         return true
       }
-      else if (currentseason === "Summer" && ((value - 1992) % 4) === 0)
+      else if (currentSeason === "Summer" && ((value - 1992) % 4) === 0)
       {
         return false
       }
-      else if (currentseason === "Winter" && ((value - 1994) % 4) === 0)
+      else if (currentSeason === "Winter" && ((value - 1994) % 4) === 0)
       {
         return false
       }
       return false
     });
-    emptyyears.forEach(function(element)
+    emptyYears.forEach(function(element)
     {
       object[element] = 0
     })
@@ -136,30 +136,30 @@ function loadline(yeararray)
     // draws the tool tip on the mouse postition and the line on the nearest year
     var mouseCoordinates = d3.mouse(this);
     var year = Math.round(xscale.invert(mouseCoordinates[0]))
-    var nearestyear = 0
+    var nearestYear = 0
 
     // finds the nearest  year from the cursor location
     lines.forEach(function(line)
     {
         line.forEach(function(point)
         {
-          if (Math.abs(year - point.year) < Math.abs(year - nearestyear))
+          if (Math.abs(year - point.year) < Math.abs(year - nearestYear))
           {
-            nearestyear = point.year
+            nearestYear = point.year
           }
         })
     })
 
     // produces the tooltip info
     var object = {}
-    object["year"] = nearestyear
+    object["year"] = nearestYear
     lines.forEach(function(line)
     {
         line.forEach(function(point)
         {
-          if (point.year == nearestyear)
+          if (point.year == nearestYear)
           {
-            object[countrylist[lines.indexOf(line)]] = point.medals
+            object[countryArray[lines.indexOf(line)]] = point.medals
           }
         })
     })
@@ -169,7 +169,7 @@ function loadline(yeararray)
     {
       text = d3.select(".tooltip")
                .style("left", (mouseCoordinates[0] + 20 + padding.left) + "px")
-               .style("top", (mouseCoordinates[1] + window.innerHeight / 10 * 6) + "px")
+               .style("top", (mouseCoordinates[1] + window.innerHeight / 10 * 6 - 20) + "px")
                .selectAll("text").data(Object.keys(object))
 
       text.enter()
@@ -193,9 +193,9 @@ function loadline(yeararray)
       linesvg.select("line").attr("class", "tooltipline")
               .style("stroke", "black")
               .attr("visibility", "visible")
-              .attr("x1", xscale(nearestyear))
-              .attr("x2", xscale(nearestyear))
-              .attr("y1", lineheight - padding.down)
+              .attr("x1", xscale(nearestYear))
+              .attr("x2", xscale(nearestYear))
+              .attr("y1", lineHeight - padding.down)
               .attr("y2", padding.up)
       }
     else
@@ -210,13 +210,13 @@ function loadline(yeararray)
   {
 
     // if the current sport has changed update all the data (lines) currently stored
-    if (currentsport != d3.select(".sportselect").property('value') || currentseason != d3.select(".seasonselect").property("value"))
+    if (currentSport != d3.select(".sportselect").property('value') || currentSeason != d3.select(".seasonselect").property("value"))
     {
       lines = []
-      for (country in countrylist)
+      for (country in countryArray)
       {
-        var data = window.requestdata(countrylist[country], "line")
-        data = addemptyyears(data)
+        var data = window.requestdata(countryArray[country], "line")
+        data = addemptyYears(data)
         var array1 = Object.keys(data)
         var array2 = array1.map(function(d){
           newobject = {}
@@ -226,8 +226,8 @@ function loadline(yeararray)
         })
         lines.push(array2)
       }
-      currentsport = d3.select(".sportselect").property('value')
-      currentseason = d3.select(".seasonselect").property("value")
+      currentSport = d3.select(".sportselect").property('value')
+      currentSeason = d3.select(".seasonselect").property("value")
     }
 
     // if an object is given turn it into a format that can be used to draw a line
@@ -235,15 +235,15 @@ function loadline(yeararray)
     {
         name = object[0]
         object = object[1]
-        if(countrylist.includes(name))
+        if(countryArray.includes(name))
         {
           return
         }
-        object = addemptyyears(object)
+        object = addemptyYears(object)
         maxvalue = Math.max.apply(null, Object.values(object))
-        if (maxvalue > yearsmaxvalue)
+        if (maxvalue > yearsMaxvalue)
         {
-          yearsmaxvalue = maxvalue
+          yearsMaxvalue = maxvalue
         }
         var array1 = Object.keys(object)
         var array2 = array1.map(function(d)
@@ -254,7 +254,7 @@ function loadline(yeararray)
           return newobject
         })
         lines.push(array2)
-        countrylist.push(name)
+        countryArray.push(name)
      }
 
     allmedals = []
@@ -272,9 +272,9 @@ function loadline(yeararray)
     })
 
     // axis
-    xscale.range([padding.left, linewidth - padding.right])
+    xscale.range([padding.left, lineWidth - padding.right])
                   .domain([Math.min.apply(null, allyears), Math.max.apply(null, allyears)])
-    yscale.range([lineheight - padding.down, padding.up])
+    yscale.range([lineHeight - padding.down, padding.up])
           .domain([0, Math.max.apply(null, allmedals)])
     var xaxis =  d3.axisBottom().scale(xscale)
     var yaxis = d3.axisLeft().scale(yscale)
@@ -289,7 +289,7 @@ function loadline(yeararray)
                 .merge(currentlines)
                 .attr("class", "line")
                 .attr("d", line)
-                .attr("stroke", function(d) {return color(countrylist[lines.indexOf(d)])})
+                .attr("stroke", function(d) {return color(countryArray[lines.indexOf(d)])})
 
     currentlines.exit().remove()
   }

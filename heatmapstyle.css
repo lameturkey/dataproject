@@ -3,6 +3,10 @@
   position: absolute;
   z-index: 100;
 }
+.overlay
+{
+    opacity: 0;
+}
 .axistitle
 {
   font-family: sans-serif;
@@ -13,6 +17,10 @@
   top: 100px;
   position: absolute;
   z-index: 111;
+}
+.tooltipline
+{
+  pointer-events: none;
 }
 .aboutdata
 {
@@ -54,6 +62,7 @@
 .line {
   fill: none;
   stroke-width: 2px;
+  pointer-events: none;
 }
 
 select
