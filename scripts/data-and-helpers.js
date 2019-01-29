@@ -5,31 +5,42 @@ window.onload = dataHandler
 // initialise all the graphs
 function dataHandler()
 {
+
+  // startup tutorial
   tutorial()
-   promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
-   Promise.all(promises).then(function(values)
-   {
-    yearlist = values[3];
-    window.color = colormaker();
-    window.updateheatmap = function(x) {};
-    sportslist = values[2].sort();
-    sportslist.unshift("All");
+  promises = [d3.json("data/world_countries.json"), d3.json("data/output.json"), d3.json("data/sportslist.json"), d3.json("data/yearlist.json")]
+  Promise.all(promises).then(function(values)
+  {
+
+    // save them to more obvious variables
     geojson = values[0];
     data = values[1];
-    makebuttons(sportslist);
+    sportslist = values[2].sort();
+    sportslist.unshift("All");
+    yearlist = values[3];
+
+    // produce a color that can be acessed everywere
+    window.color = colormaker();
+
+    // produce the navigatiuon bar (needs a list of sports on wich you can filter)
+    navbar(sportslist);
+
+    // request the first data for the heatmap
     datalist =  calculatevalues(data, "", "bar");
+
+    // setup all the update functions and the function that can request data
     window.updateheatmap = loadheatmap(datalist, geojson);
     window.updatebar = loadbar();
     window.updateline = loadline(yearlist);
     window.requestdata = function(country, kind)
     {
-        return calculatevalues(data, country, kind);
+      return calculatevalues(data, country, kind);
     }
-   });
+  });
  }
 
  // make the navigation buttons
- function makebuttons(sportslist)
+ function navbar(sportslist)
  {
    seasonselect = d3.select("body").append("select").attr("class", "seasonselect").on("change", onchange)
 

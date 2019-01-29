@@ -33,10 +33,11 @@ function loadbar(dataobject)
          .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)");
 
   barsvg.append("text")
-         .attr("transform", "rotate(-90)")
-         .attr("x", -barheight / 1.5)
-         .attr("y", padding.left / 3)
-         .text("Total Medals")
+        .attr("class", "axistitle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -barheight / 1.5)
+        .attr("y", padding.left / 3)
+        .text("Total Medals")
 
   // function that removes a bar from the bar chart ()
   function removepoint(country)

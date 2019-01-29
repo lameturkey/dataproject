@@ -32,9 +32,9 @@ function loadheatmap(countrybyname, geojson)
               .append('g')
               .attr('class', 'map');
 
-  // set the projection
+  // set the projection it looks good on my width of 1280 so scale to that
   var projection = d3.geoMercator()
-                     .scale(100)
+                     .scale(100 * (window.innerWidth/1280))
                     .translate( [width / 2, height / 1.5]);
 
   // make the path

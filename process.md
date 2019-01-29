@@ -178,4 +178,8 @@ and code improvements
 
 # day 17
 # 29/01/2019
-fix the scale of the world map on weird scales
+TODO:
+fixing of the format of the axistitle (done)
+add axis title to other graph ( done)
+and code improvements (..)
+fix the scale of the world map on weird scales (done)

@@ -28,6 +28,9 @@ d3.select("lol")
         .method()
         .method()
 
+Behalve als de chaining kort genoeg is eg.
+d3.select("lol").method()
+
 ### regal 6
 Multi line comment voor elke functie
 

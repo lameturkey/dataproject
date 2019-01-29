@@ -3,6 +3,11 @@
   position: absolute;
   z-index: 100;
 }
+.axistitle
+{
+  font-family: sans-serif;
+  font-size: 10px;
+}
 .skipbutton
 {
   top: 100px;

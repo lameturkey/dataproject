@@ -12,7 +12,7 @@ function loadline(yeararray)
   var currentsport = d3.select(".sportselect").property('value')
   var currentseason = d3.select(".seasonselect").property("value")
   var padding = {
-    left: 30,
+    left: 50,
     right: 30,
     up: 3,
     down: 25
@@ -57,10 +57,28 @@ function loadline(yeararray)
   linesvg.append("line").attr("class", "tooltipline")
 
 
-  linesvg.append("g").attr("class", "linexaxis")
-                    .call(xaxis).attr("transform", "translate(0," + (lineheight - padding.down) + ")");
-  linesvg.append("g").attr("class", "lineyaxis")
-                    .call(yaxis).attr("transform", "translate("+ padding.left + ", 0)")
+  linesvg.append("g")
+         .attr("class", "linexaxis")
+         .call(xaxis)
+         .attr("transform", "translate(0," + (lineheight - padding.down) + ")");
+
+  linesvg.append("g")
+         .attr("class", "lineyaxis")
+         .call(yaxis)
+         .attr("transform", "translate("+ padding.left + ", 0)")
+
+  linesvg.append("text")
+        .attr("class", "axistitle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -lineheight / 1.5)
+        .attr("y", padding.left / 3)
+        .text("Total Medals")
+
+  linesvg.append("text")
+         .attr("class", "axistitle")
+         .attr("y", lineheight - padding.down / 2)
+         .attr("x", linewidth / 2)
+         .text("Year")
 
   // function to remove a line and assign it to the window so it can be used everywere
   window.removeline = function removeline(country)
@@ -266,10 +284,12 @@ function loadline(yeararray)
 
     currentlines = linesvg.selectAll(".line").data(lines)
 
-    currentlines.enter().append("path").merge(currentlines)
-      .attr("class", "line")
-      .attr("d", line)
-      .attr("stroke", function(d) {return color(countrylist[lines.indexOf(d)])})
+    currentlines.enter()
+                .append("path")
+                .merge(currentlines)
+                .attr("class", "line")
+                .attr("d", line)
+                .attr("stroke", function(d) {return color(countrylist[lines.indexOf(d)])})
 
     currentlines.exit().remove()
   }
