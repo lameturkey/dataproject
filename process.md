@@ -201,4 +201,9 @@ TODO:
 code improvement(DONE)
 fix file structure of the python files(..)
 muis 80% width tooltip on the left(fixed)
+
+fix feedback:
+formatting van as
+verander alle fonts en dropdown van de standaard.
+
 then done!

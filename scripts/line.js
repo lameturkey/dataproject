@@ -299,7 +299,7 @@ function loadline(yearArray)
 
     yscale.range([lineHeight - padding.down, padding.up])
           .domain([0, Math.max.apply(null, allmedals)]);
-    var xaxis =  d3.axisBottom().scale(xscale);
+    var xaxis =  d3.axisBottom().scale(xscale).tickFormat(d3.format("d"));
     var yaxis = d3.axisLeft().scale(yscale);
 
     d3.select(".linexaxis").transition().call(xaxis);

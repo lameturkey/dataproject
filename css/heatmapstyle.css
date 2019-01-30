@@ -32,6 +32,7 @@
 {
   position:fixed;
   z-index: 40;
+  font-family: sans-serif;
 }
 
 .aboutme
@@ -39,13 +40,18 @@
   position: fixed;
   left: 100px;
   z-index: 40;
+  font-family: sans-serif;
 }
 .filtertext
 {
+  font-family: sans-serif;
   position: fixed;
   left: 200px
-
 }
+a:link {
+  text-decoration: none;
+}
+
 .tooltip
 {
   position: absolute;
