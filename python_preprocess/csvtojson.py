@@ -1,8 +1,12 @@
 import csv
 import json
+import os
 
-athletefile = "athlete_events.csv"
-populationfile = "poulation.csv"
+athletefile = os.path.join( os.getcwd(), '..', 'data', 'athlete_events.csv')
+outputfile = os.path.join( os.getcwd(), '..', 'data', 'output.json')
+sportsfile = os.path.join( os.getcwd(), '..', 'data', 'sportslist.json')
+yearfile = os.path.join( os.getcwd(), '..', 'data', 'yearlist.json')
+conversion = os.path.join( os.getcwd(), '..', 'data', 'conversion.json')
 
 def reader(filename):
 
@@ -54,8 +58,8 @@ def savejson(dictionaries, name):
     with open(name, 'w+') as jsonfile:
         json.dump(dictionaries, jsonfile, indent=4)
 
-def convert(list):
-    with open("conversion.json", "r") as jsonfile:
+def convert(name, list):
+    with open(name, "r") as jsonfile:
         conversionlist = json.load(jsonfile)
         for item in conversionlist:
             try:
@@ -100,18 +104,19 @@ if __name__ == '__main__':
     athletes = clean(athletes)
 
     # convert the file (NOC -> country conversion)
-    athletes = convert(athletes)
+    athletes = convert(conversion, athletes)
 
     # make hardcoded adjustments to the countries that have different names for some reason
     athletes = hardcode(athletes)
 
     #  save the output (datajson)
-    savejson(athletes, "output.json")
+    print(outputfile)
+    savejson(athletes, outputfile)
 
     # save all the sports
     sportslist = savefilters(athletes)
-    savejson(sportslist, "sportslist.json")
+    savejson(sportslist, sportsfile)
 
     # save all the years
     years = saveyears(athletes)
-    savejson(years, "yearlist.json")
+    savejson(years, yearfile)

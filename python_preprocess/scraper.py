@@ -4,6 +4,10 @@ from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
 import json
+import os
+
+conversionfile = os.path.join( os.getcwd(), '..', 'data', 'conversion.json')
+
 
 def simple_get(url):
     """
@@ -43,7 +47,7 @@ def extract(dom):
         return convertlist
 
 def savejson(dictionaries):
-    with open('conversion.json', 'w+') as jsonfile:
+    with open(conversionfile, 'w+') as jsonfile:
         json.dump(dictionaries, jsonfile, indent=4)
 
 def savecsv(conversionlist):
@@ -57,4 +61,3 @@ if __name__ == '__main__':
     dom = BeautifulSoup(html, 'html.parser')
     conversionlist = extract(dom)
     savejson(conversionlist)
-    savecsv(conversionlist)

@@ -3,6 +3,11 @@
   position: absolute;
   z-index: 100;
 }
+
+.linechart
+{
+  position: relative;
+}
 .overlay
 {
     opacity: 0;
@@ -20,6 +25,7 @@
 }
 .tooltipline
 {
+  stroke: black;
   pointer-events: none;
 }
 .aboutdata
@@ -124,10 +130,12 @@ svg
   text-align: center;
 }
 
-
-/*    text{
-  pointer-events:none;
-}*/
+.countryform
+{
+  fill: blue;
+  stroke: white;
+  stroke-width: 1.5
+}
 
 .details{
   color:white;

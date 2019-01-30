@@ -189,3 +189,16 @@ als muis over 80% width maak de div links niet rechts in de line chart
 
 fixed a bug where spam clicking the axis title will cause everything to dissapear
 fix file structure van de github repo (...)
+
+
+feedback:
+formatting van as
+verander alle fonts en dropdown van de standaard.l
+
+# day 18
+# 30/01/2019
+TODO:
+code improvement(DONE)
+fix file structure of the python files(..)
+muis 80% width tooltip on the left(fixed)
+then done!

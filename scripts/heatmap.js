@@ -9,18 +9,19 @@ function loadheatmap(countrybyname, geojson)
               .attr('class', 'd3-tip')
               .direction("s")
               .offset([-0, -10])
-              .html(function(d) {
+              .html(function(d)
+              {
                 return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Total Medals: </strong><span class='details'>" + format(d.value) +"</span>";
-              })
+              });
 
   // graph padding
-              width = window.innerWidth / 100 * 50
-              height = window.innerHeight / 10 * 6
+  width = window.innerWidth / 100 * 50;
+  height = window.innerHeight / 10 * 6;
 
-  // color coding used for opacity
+  // opacity coding function
   var opacity = d3.scaleLinear()
-      .domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
-      .range([0.05, 1])
+                  .domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
+                  .range([0.05, 1]);
 
   // produce svg
   var svg = d3.select("body")
@@ -40,21 +41,22 @@ function loadheatmap(countrybyname, geojson)
 
   // initialise the tooltip with values
   svg.call(tip);
-    geojson.features.forEach(function(d)
-    {
-        d.value = countrybyname[d.properties.name]
-    });
+
+  // assign the data to the map
+  geojson.features.forEach(function(d)
+  {
+      d.value = countrybyname[d.properties.name]
+  });
 
   // append all countries as paths
   svg.append("g")
       .attr("class", "countries")
-    .selectAll("path")
+      .selectAll("path")
       .data(geojson.features)
-    .enter().append("path").attr("class", "countryform")
+      .enter()
+      .append("path")
+      .attr("class", "countryform")
       .attr("d", path)
-      .style("fill", "blue")
-      .style('stroke', 'white')
-      .style('stroke-width', 1.5)
       // use the opacity for "heatmapping"
       .style("opacity", function(d) {
         if (d.value != undefined)
@@ -65,40 +67,41 @@ function loadheatmap(countrybyname, geojson)
       })
 
       // tooltips
-        .style("stroke","white")
-        .style('stroke-width', 0.3)
-        .on('mouseover',function(d){
-          if(d.value == undefined)
-          {
-            d.value = 0
-          }
-          tip.show(d);
-          d3.select(this)
-            .style("stroke","white")
-            .style("stroke-width",3);
-        })
-        .on('mouseout', function(d){
-          tip.hide(d);
+      .style("stroke","white")
+      .style('stroke-width', 0.3)
+      .on('mouseover',function(d)
+      {
+        if(d.value == undefined)
+        {
+          d.value = 0
+        }
+        tip.show(d);
+        d3.select(this)
+          .style("stroke","white")
+          .style("stroke-width",3);
+      })
+      .on('mouseout', function(d)
+      {
+        tip.hide(d);
+        d3.select(this)
+          .style("stroke","white")
+          .style("stroke-width",0.3);
+      })
 
-          d3.select(this)
-
-            .style("stroke","white")
-            .style("stroke-width",0.3);
-        })
-
-        // on click send info to line and bar charts
-        .on("click", function(d){
-          name = d.properties.name;
-          object = {}
-          object[name] = countrybyname[name]
-          if(object[name] != undefined)
-          {
+      // on click send info to line and bar charts
+      .on("click", function(d)
+      {
+        name = d.properties.name;
+        object = {}
+        object[name] = countrybyname[name]
+        if(object[name] != undefined)
+        {
           var data = window.requestdata(name, "bar")
           window.updatebar(data)
           var data = window.requestdata(name, "line")
           window.updateline([name, data])
-          }
-        });
+        }
+      });
 
   svg.append("path")
       .datum(topojson.mesh(geojson.features, function(a, b) { return a.id !== b.id; }))
@@ -110,11 +113,13 @@ function loadheatmap(countrybyname, geojson)
     {
 
       // update the opacity scale and set the new values for each country
-      countrybyname = calculatevalues(data, "", "bar")
-      opacity.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
-          .range([0.05, 1])
+      countrybyname = calculatevalues(data, "", "bar");
 
-      geojson.features.forEach(function(d) {
+      opacity.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
+             .range([0.05, 1]);
+
+      geojson.features.forEach(function(d)
+      {
           d.value = countrybyname[d.properties.name]
       });
 
@@ -127,7 +132,7 @@ function loadheatmap(countrybyname, geojson)
                 return opacity(d.value)
               }
               return 0
-            })
+            });
     }
 
 }
