@@ -82,11 +82,11 @@ select
     position: fixed;
     z-index: 40;
 }
-.seasonselect
+.seasonSelect
 {
   left: 450px
 }
-.sportselect
+.sportSelect
 {
   left: 250px
 }

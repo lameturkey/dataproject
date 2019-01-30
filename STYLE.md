@@ -14,14 +14,14 @@ elke method chain op eigen regel
 
 static styles in css
 
-### Regal 5
+### regel 5
 
 op nieuwe regels
 function(x)
 {
 
 }
-### regal 6
+### regel 6
 elke nieuwe chaining op een nieuwe regel eg.
 d3.select("lol")
         .method()
@@ -35,16 +35,16 @@ of selections
 d3.select("lol").selectAll("hue")
                 .method()
 
-### regal 6
+### regel 6
 Multi line comment voor elke functie
 
-### regal 7
+### regel 7
 Header comment over het programma en credit where due
 
-### regal 8
+### regel 8
 definieer consistent met alleen Var of alleen let, dus niet zonder
 
-### regal 9
+### regel 9
 spaties rondom wiskundige tekens
 
 

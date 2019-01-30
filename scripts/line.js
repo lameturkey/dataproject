@@ -1,5 +1,5 @@
 // loads the line graph as just axis and returns the function that updates the line graph
-function loadline(yearArray)
+function loadLine(yearArray)
 {
 
   // variables for the line graph
@@ -17,8 +17,8 @@ function loadline(yearArray)
   // data variables
   var lines = [];
   var countryArray = [];
-  var currentSport = d3.select(".sportselect").property('value');
-  var currentSeason = d3.select(".seasonselect").property("value");
+  var currentSport = d3.select(".sportSelect").property('value');
+  var currentSeason = d3.select(".seasonSelect").property("value");
 
 
   // produce the barebones line chart
@@ -89,7 +89,7 @@ function loadline(yearArray)
         var index = countryArray.indexOf(country);
         countryArray.splice(index, 1);
         lines.splice(index, 1);
-        window.updateline()
+        window.updateLine()
       }
 
   // function to set all years where no medal was won to 0 instead of no data
@@ -97,7 +97,7 @@ function loadline(yearArray)
   {
 
     // get the current season and year (for relevant years)
-    var currentSeason = d3.select(".seasonselect").property("value")
+    var currentSeason = d3.select(".seasonSelect").property("value")
     var currentYears = Object.keys(object)
 
     // filter the relevant years (before 1992 winter and summer were at the same time)
@@ -245,7 +245,7 @@ function loadline(yearArray)
     lines = [];
     for (country in countryArray)
     {
-      var data = window.requestdata(countryArray[country], "line");
+      var data = window.requestData(countryArray[country], "line");
       data = addemptyYears(data);
       var array1 = Object.keys(data);
       var array2 = array1.map(function(d)
@@ -257,8 +257,8 @@ function loadline(yearArray)
       })
       lines.push(array2);
     }
-    currentSport = d3.select(".sportselect").property('value');
-    currentSeason = d3.select(".seasonselect").property("value");
+    currentSport = d3.select(".sportSelect").property('value');
+    currentSeason = d3.select(".seasonSelect").property("value");
    }
 
   // update function of the line graph takes an object with data from calculate values.
@@ -266,7 +266,7 @@ function loadline(yearArray)
   {
 
     // if the current sport has changed update all the data (lines) currently stored
-    if (currentSport != d3.select(".sportselect").property('value') || currentSeason != d3.select(".seasonselect").property("value"))
+    if (currentSport != d3.select(".sportSelect").property('value') || currentSeason != d3.select(".seasonSelect").property("value"))
     {
       updatedata();
     }

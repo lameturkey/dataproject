@@ -1,4 +1,4 @@
-function loadheatmap(countrybyname, geojson)
+function loadHeatmap(countryByName, geojson)
 {
 
   // formatting of the value
@@ -20,7 +20,7 @@ function loadheatmap(countrybyname, geojson)
 
   // opacity coding function
   var opacity = d3.scaleLinear()
-                  .domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
+                  .domain([Math.min.apply(null, Object.values(countryByName)), Math.max.apply(null, Object.values(countryByName))])
                   .range([0.05, 1]);
 
   // produce svg
@@ -45,7 +45,7 @@ function loadheatmap(countrybyname, geojson)
   // assign the data to the map
   geojson.features.forEach(function(d)
   {
-      d.value = countrybyname[d.properties.name]
+      d.value = countryByName[d.properties.name]
   });
 
   // append all countries as paths
@@ -93,13 +93,13 @@ function loadheatmap(countrybyname, geojson)
       {
         name = d.properties.name;
         object = {}
-        object[name] = countrybyname[name]
+        object[name] = countryByName[name]
         if(object[name] != undefined)
         {
-          var data = window.requestdata(name, "bar")
-          window.updatebar(data)
-          var data = window.requestdata(name, "line")
-          window.updateline([name, data])
+          var data = window.requestData(name, "bar")
+          window.updateBar(data)
+          var data = window.requestData(name, "line")
+          window.updateLine([name, data])
         }
       });
 
@@ -113,14 +113,25 @@ function loadheatmap(countrybyname, geojson)
     {
 
       // update the opacity scale and set the new values for each country
-      countrybyname = calculatevalues(data, "", "bar");
+      var countryByName = window.requestData("", "bar");
+      var min = Math.min.apply(null, Object.values(countryByName))
+      var max = Math.max.apply(null, Object.values(countryByName))
 
-      opacity.domain([Math.min.apply(null, Object.values(countrybyname)), Math.max.apply(null, Object.values(countrybyname))])
-             .range([0.05, 1]);
+      // when min = max it tended to do everything 0.05 wich is unreadable
+      if (min != max)
+      {
+        opacity.domain([min, max])
+               .range([0.05, 1]);
+      }
+      else
+      {
+        opacity.domain([min, max])
+               .range([1, 1]);
+      }
 
       geojson.features.forEach(function(d)
       {
-          d.value = countrybyname[d.properties.name]
+          d.value = countryByName[d.properties.name]
       });
 
       // update all the values

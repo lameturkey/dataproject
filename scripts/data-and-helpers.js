@@ -28,15 +28,15 @@ function handler()
     navbar(sportslist);
 
     // request the first data for the heatmap
-    datalist =  calculatevalues(data, "", "bar");
+    datalist =  calculateValues(data, "", "bar");
 
     // setup all the update functions and the function that can request data
-    window.updateheatmap = loadheatmap(datalist, geojson);
-    window.updatebar = loadbar();
-    window.updateline = loadline(yearlist);
-    window.requestdata = function(country, kind)
+    window.updateHeatmap = loadHeatmap(datalist, geojson);
+    window.updateBar = loadBar();
+    window.updateLine = loadLine(yearlist);
+    window.requestData = function(country, kind)
     {
-      return calculatevalues(data, country, kind);
+      return calculateValues(data, country, kind);
     }
   });
  }
@@ -46,17 +46,17 @@ function navbar(sportslist)
 {
 
  // season dropdown
- seasonselect = d3.select("body").append("select").attr("class", "seasonselect").on("change", onchange);
+ var seasonSelect = d3.select("body").append("select").attr("class", "seasonSelect").on("change", onchange);
 
- seasonselect.append("option").text("All").attr("value", "All");
- seasonselect.append("option").text("Winter").attr("value", "Winter");
- seasonselect.append("option").text("Summer").attr("value", "Summer");
+ seasonSelect.append("option").text("All").attr("value", "All");
+ seasonSelect.append("option").text("Winter").attr("value", "Winter");
+ seasonSelect.append("option").text("Summer").attr("value", "Summer");
 
  // sport dropdown
- sportselect = d3.select("body").append("select").attr("class", "sportselect").on("change", onchange);
+ var sportSelect = d3.select("body").append("select").attr("class", "sportSelect").on("change", onchange);
  for (var item in sportslist)
  {
-   sportselect.append("option").text(sportslist[item]).attr('value', sportslist[item]);
+   sportSelect.append("option").text(sportslist[item]).attr('value', sportslist[item]);
  }
 
  // other links
@@ -76,19 +76,22 @@ function navbar(sportslist)
 }
 
 // calculates the (filtered) values for all graphs
-function calculatevalues(data, countryFilter, graph)
+function calculateValues(data, countryFilter, graph)
 {
- season = d3.select(".seasonselect").property('value');
+
+ var season = d3.select(".seasonSelect").property('value');
  if (season == "All")
  {
    season = "";
  }
- sportsFilter = d3.select(".sportselect").property('value');
+
+ var sportsFilter = d3.select(".sportSelect").property('value');
  if (sportsFilter == "All")
  {
    sportsFilter = "";
  }
- object = {};
+
+ var object = {};
  Object.keys(data).forEach(function(country)
  {
   counter = 0;
@@ -129,23 +132,23 @@ return object
 // if a change is made to the filters
 function onchange()
 {
- window.updateheatmap();
- window.updatebar();
- window.updateline();
+ window.updateHeatmap();
+ window.updateBar();
+ window.updateLine();
 }
 
 // function to color code the bars and lines
 function colormaker()
 {
- colorobject = {};
+ var colorObject = {};
  var color = d3.scaleOrdinal(d3.schemeCategory10);
  return function(x)
  {
-   if (!(Object.keys(colorobject).includes(x)))
+   if (!(Object.keys(colorObject).includes(x)))
    {
-     colorobject[x] = Object.keys(colorobject).length;
+     colorObject[x] = Object.keys(colorObject).length;
    }
-     return color(colorobject[x])
+     return color(colorObject[x])
  }
 }
 
@@ -169,8 +172,8 @@ function tutorial()
 
 
  i = 0;
- slideshow(i);
- function slideshow(i)
+ slideShow(i);
+ function slideShow(i)
  {
    if (i > 3 )
    {
@@ -181,7 +184,7 @@ function tutorial()
    d3.select(".image").attr("src", "../docs/tutorial"+ i + ".png");
    i = i + 1;
 
-   setTimeout(slideshow, 4000, i);
+   setTimeout(slideShow, 4000, i);
  }
 
 
