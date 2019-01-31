@@ -188,7 +188,7 @@ function loadLine(yearArray)
       text.enter()
           .append("text")
           .merge(text)
-          .attr("y", (d, i) => i * 20)
+          .attr("y", function(d, i) {return i * 20})
           .html(function(d)
             {
                 // formatting of the tooltip
