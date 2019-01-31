@@ -97,9 +97,14 @@ function loadHeatmap(countryByName, geojson)
         if(object[name] != undefined)
         {
           var data = window.requestData(name, "bar")
-          window.updateBar(data)
-          var data = window.requestData(name, "line")
-          window.updateLine([name, data])
+
+          // check if something is in it 
+          if (Object.keys(data).length != 0)
+          {
+            window.updateBar(data)
+            var data = window.requestData(name, "line")
+            window.updateLine([name, data])
+          }
         }
       });
 
