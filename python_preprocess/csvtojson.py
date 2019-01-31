@@ -54,10 +54,12 @@ def clean(athletes):
 
     return countrydict
 
+# save a dict to a json
 def savejson(dictionaries, name):
     with open(name, 'w+') as jsonfile:
         json.dump(dictionaries, jsonfile, indent=4)
 
+# convert to the desired structure
 def convert(name, list):
     with open(name, "r") as jsonfile:
         conversionlist = json.load(jsonfile)
@@ -69,6 +71,7 @@ def convert(name, list):
                 pass
     return list
 
+# saves all the sports in a list
 def savefilters(athletes):
     sportslist = []
     for country in athletes:
@@ -79,6 +82,7 @@ def savefilters(athletes):
                         sportslist.append(sport)
     return sportslist
 
+# saves all the years in a list
 def saveyears(athletes):
     yearlist = []
     for country in athletes:
@@ -88,6 +92,7 @@ def saveyears(athletes):
                 yearlist.append(game)
     return yearlist
 
+# hardcode some countries to match the geojson country names
 def hardcode(athletes):
     hardcodelist = [["England", "Great Britain"], ["USA", "United States"], ["Lebanon", "LIB"], ["The Bahamas", "Bahamas"]]
     for element in hardcodelist:

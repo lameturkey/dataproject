@@ -4,7 +4,7 @@
 Website link: https://lameturkey.github.io/dataproject/pages/worldmap.html
 ![Screenshot1](docs/Screenshot1.png)![Screenshot2](docs/Screenshot2.png)
 
-With this web application you can compare countries in the olympic games at specefic events or kind of olympics (summer winter).
+With this web application you can compare countries in the olympic games at specefic events or kind of olympics (summer or winter).
 
 # my License
 MIT License
@@ -65,6 +65,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
+(some code used)
 # The worldmap lisence:
 This block appears to have no license. Please contact the author to request a license.
+
+# Kaggle data license:
+https://creativecommons.org/publicdomain/zero/1.0/

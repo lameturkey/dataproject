@@ -1,3 +1,7 @@
+# Code was taken from the first scraper exirise
+# See: https://github.com/lameturkey/dataprocessing/blob/master/Homework/Week_1/moviescraper.py
+# This script scrapes info from wikipedia for NOC -> country conversion
+
 import csv
 from requests import get
 from requests.exceptions import RequestException
@@ -7,7 +11,6 @@ import json
 import os
 
 conversionfile = os.path.join( os.getcwd(), '..', 'data', 'conversion.json')
-
 
 def simple_get(url):
     """
@@ -25,6 +28,7 @@ def simple_get(url):
         print('The following error occurred during HTTP GET request to {0} : {1}'.format(url, str(e)))
         return None
 
+
 def is_good_response(resp):
     """
     Returns true if the response seems to be HTML, false otherwise
@@ -39,7 +43,6 @@ def extract(dom):
         convertlist = []
         for row in dom.find_all("tr")[1:]:
             data = row.find_all("td")
-            print(data)
             code = data[0].span.string
             country = data[1].a.string
             convertlist.append([code, country])

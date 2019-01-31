@@ -72,7 +72,7 @@ maybe make the navigation in bootstrap above (idea)
 ##### 11/01/2019
 
 I'm having trouble acessing my data trough my functions. Looking up more information about scopes and functions
-Tried to help somone with geojsons. ended up learning a bit about them
+Tried to help somone with geojsons. ended up learning a bit about geojson
 
 
 # day 6
