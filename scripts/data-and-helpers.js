@@ -62,7 +62,7 @@ function navbar(sportslist)
  // other links
  d3.select("body").append("a")
                   .attr("class", "aboutme")
-                  .attr("href", "pages/aboutme.html")
+                  .attr("href", "aboutme.html")
                   .text("about me");
 
  d3.select("body").append("text")
@@ -71,7 +71,7 @@ function navbar(sportslist)
 
  d3.select("body").append("a")
                   .attr("class", "aboutdata")
-                  .attr("href", "pages/aboutdata.html")
+                  .attr("href", "aboutdata.html")
                   .text("about data");
 }
 

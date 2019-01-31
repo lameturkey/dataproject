@@ -6,6 +6,14 @@ Website link: https://lameturkey.github.io/dataproject/pages/worldmap.html
 
 With this web application you can compare countries in the olympic games at specefic events or kind of olympics (summer or winter).
 
+#External stuff:
+#### data:
+* athlete_events.csv [source](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results)
+* scraping from wikipedia: https://en.wikipedia.org/wiki/List_of_IOC_country_codes
+* quite some parts of http://bl.ocks.org/jeremycflin/b43ab253f3ae02dced07 for the world map
+* icon png: https://www.kisspng.com/png-olympic-rings-png-62687/ (License: Personal Use (is this okay??))
+
+
 # my License
 MIT License
 
@@ -29,12 +37,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-#External stuff:
-#### data:
-* athlete_events.csv [source](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results)
-* scraping from wikipedia: https://en.wikipedia.org/wiki/List_of_IOC_country_codes
-* quite some parts of http://bl.ocks.org/jeremycflin/b43ab253f3ae02dced07 for the world map
-* icon png: https://www.kisspng.com/png-olympic-rings-png-62687/ (License: Personal Use (is this okay??))
 
 # D3 License
 Copyright 2010-2017 Mike Bostock

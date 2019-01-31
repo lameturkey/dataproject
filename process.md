@@ -5,7 +5,7 @@ the martini glass was chosen to be the way of story telling over the other becau
 Toughts on design process:
 * combine and change the data into easy to use .json
 * make all changes to the data in python beforehand
-* global data variables
+* global data variables(?)
 
 # day2
 ##### 8/01/2019
