@@ -15,8 +15,8 @@ Scraper.py scrapes wikipedia for a national olympic comitee -> country name conv
 
 csvtojson.py converts the csv to a handy json designed specifically for my webpage. csvtojson uses the conversion.json.
 Not only does it output the data (to output) it also makes a list of all the years and sports.
-Years are useful because then i know when a country has 0 medals
-Sports is useful for the  sportsfilter
+Years are useful to detect when a country has 0 medals
+Sports is useful for the sportsfilter
 
 My web application its building block is the 'handler' function (in the data and helpers file). This function calls all the relevant make graph functions (bar, line, heatmap). These functions then return the update function to update these graphs.
 
@@ -30,6 +30,8 @@ Everything in the object will be added to the graph. These objects can be reques
 
 the final design can be seen in detail the following UML:
 ![Finalstructure](docs/finalstructure.png)
+
+the handler also starts a tutorial omitted from the UML (basicly a skippable slide show)
 
 The proposal has been followed when possible. However some changes were made as seen in the following chart:
 
