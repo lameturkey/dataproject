@@ -33,6 +33,8 @@ Everything in the object will be added to the graph. These objects can be reques
 the final design can be seen in detail the following UML:
 ![Finalstructure](docs/finalstructure.png)
 
+a few simple functions were omitted from the diagram.
+
 # handler:
 1. starts tutorial
 2. asks for data from server
