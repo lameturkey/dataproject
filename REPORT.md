@@ -7,6 +7,8 @@ The comparison can be made in total medals and uses three different graphs:
 3. Line chart to compare over the years
 The charts can also be filtered on sports and on season.
 
+extra features: resizes graphs to screen automatically, tutorial
+
 ![Screenshot2](docs/Screenshot2.png)
 # Final design
 The preprocessing in python uses two files, scraper and csvtojson.py.
@@ -18,7 +20,7 @@ Not only does it output the data (to output) it also makes a list of all the yea
 Years are useful to detect when a country has 0 medals
 Sports is useful for the sportsfilter
 
-My web application its building block is the 'handler' function (in the data and helpers file). This function calls all the relevant make graph functions (bar, line, heatmap). These functions then return the update function to update these graphs.
+My web application its core function is the 'handler' function (in the data and helpers file). This function calls all the relevant make graph functions (bar, line, heatmap). These functions then return the update function to update these graphs.
 
 The update functions all require an object:
 
@@ -31,22 +33,20 @@ Everything in the object will be added to the graph. These objects can be reques
 the final design can be seen in detail the following UML:
 ![Finalstructure](docs/finalstructure.png)
 
-Handler:
-Calls the load functions and assigns the update functions to a global scope (window) also calls the tutorial and makes the navigation bar. The handler can also receive datarequests to send to calculatevalues where requested data is filtered.
-
-# functions
-##### handler:
+# handler:
 1. starts tutorial
 2. asks for data from server
-3. calls every load function
+3. calls every load function and assigns the update functions to the window
 4. produces the nav bar.
 5. produces the color function and assigns it to the window (every country same color)
-6. setsup requestData for user requests
+6. sets up requestData for user requests
 
 ##### loadBar/Line/Heatmap:
 Loads the barebone chart and defines some functions then returns the update function to update this barchart
 
-Loadline needs one parameter a list for all the existing years.
+Loadline needs one parameter a list for all the existing years so it can adjust the object recieved accordingly.
+
+loadHeatmap and loadBar need no parameter
 
 (all update bars can be called without arguments just to update)
 ##### updateBar:
@@ -55,7 +55,7 @@ updatebar has one parameter an object with {country: medal} to add to the barcha
 Also checks if the filter applied is correct if this is not correct it requests new data for every country. This is done by the local function updateData()
 
 ##### updateLine:
-Updateline also has one parameter but the object is structured like: {year: medals, year: medals}.
+Updateline also has one parameter but the parameter is structured like: [country, {year: medals, year: medals}].
 
 This object needs to be converted to an coordinate array. [x,y] objectoline() does this.
 
@@ -73,13 +73,16 @@ The proposal has been followed when possible. However some changes were made as 
 
 I will summarize the changes in comparison to the design.md and then explain my thought process behind them:
 
+ (see [design.md](https://github.com/lameturkey/dataproject/blob/master/docs/diagram.png)
+
 1. The 'data handler' function makes all the graphs and keeps track of the update functions. The load world map function should only load the world map while leaving more data centered operations to other functions.
-2. The line and bar chart updates when clicked on the heatmap. Instead of the proposed onclick (see [design.md](https://github.com/lameturkey/dataproject/blob/master/docs/diagram.png). This is a design question addressed in the first week of feedback (8/01/2019). I have chosen this approach because of a few reasons:
+
+2. The line and bar chart updates when clicked on the heatmap. Instead of the proposed onclick. This is a design question addressed in the first week of feedback (8/01/2019). I have chosen this approach because of a few reasons:
   1. Clicking on a line in a chart is hard
   2. Removing countries and adding would need two clicks (line and bar needs to be clicked) this solution is more user friendly.
 
 
-3. The data structure of my json object is different. I lost some important features with the proposed data structure. (I.E. what sport?). Two arrays would be difficult to traverse because you have to constantly lookup the index of the years to get the medals there. This is confusing, the final nested approach  is easier to traverse and filter trough.
+3. The data structure of my json object is different. I lost some important features with the proposed data structure. (I.E. what sport?). Also two arrays would be difficult to traverse because you have to constantly lookup the index of the years to get the medals there. This is confusing, the final nested approach  is easier to traverse and filter trough.
 
 4. I had to add two additional json objects to be read for other aspects. One for the total list of sports and one for all the year olympics were held. I chose to make an json of this because otherwise every time the window opens it has to find all the different sports and years cutting into my loading time.
 

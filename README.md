@@ -1,8 +1,14 @@
 # Olympic medals over the world
 ### by Koen van der Kamp 12466573
 
-Website link: https://lameturkey.github.io/dataproject/pages/worldmap.html
+Website link:
+[website](https://lameturkey.github.io/dataproject/pages/worldmap.html)
 ![Screenshot1](docs/Screenshot1.png)![Screenshot2](docs/Screenshot2.png)
+
+Video link:
+[video](https://youtu.be/4gC6s_Bfr88)
+
+Disclaimer: the dropdown is not working due screencast!!
 
 With this web application you can compare countries in the olympic games at specefic events or kind of olympics (summer or winter).
 
