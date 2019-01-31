@@ -90,7 +90,7 @@ I will summarize the changes in comparison to the design.md and then explain my 
 
 6. The user input request for data is handled via the handler. This is to make the code as adaptable as possible for future features as no data has been made global. Only the function to request this data.
 
-7. Population data was not used. I feel like the time needed to add another dataset would not be worth the feature (display medals/population on the y axis). Instead I devoted my time to debugging and making the code better and cleaner.
+7. Population data was not used. I feel like the time needed to add another dataset would not be worth the feature (display medals/population on the y axis). Instead I devoted my time to debugging and making the code better and cleaner and adding a seasonal and sport specific dropdowns. This is also more inline to comparing countries than different y axises
 
 # Challenges
 1. The best way to make a json of my data (data structure)
